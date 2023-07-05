@@ -69,7 +69,7 @@ model Baby {
     updatedAt DateTime @updatedAt
     name      String
     birthDate DateTime
-    Image     String?
+    image     String
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String
     @@index([userId])

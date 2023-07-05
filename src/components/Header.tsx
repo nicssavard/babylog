@@ -1,12 +1,12 @@
-import { Fragment } from 'react'
-import Link from 'next/link'
-import { Popover, Transition } from '@headlessui/react'
-import clsx from 'clsx'
+import { Fragment } from "react";
+import Link from "next/link";
+import { Popover, Transition } from "@headlessui/react";
+import clsx from "clsx";
 
-import { Button } from '@/components/Button'
-import { Container } from '@/components/Container'
-import { Logo } from '@/components/Logo'
-import { NavLink } from '@/components/NavLink'
+import { Button } from "@/components/Button";
+import { Container } from "@/components/Container";
+import { Logo } from "@/components/Logo";
+import { NavLink } from "@/components/NavLink";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 type MobileNavLinkProps = {
@@ -19,7 +19,7 @@ function MobileNavLink({ href, children }: MobileNavLinkProps) {
     <Popover.Button as={Link} href={href} className="block w-full p-2">
       {children}
     </Popover.Button>
-  )
+  );
 }
 
 type MobileNavIconProps = {
@@ -38,19 +38,19 @@ function MobileNavIcon({ open }: MobileNavIconProps) {
       <path
         d="M0 1H14M0 7H14M0 13H14"
         className={clsx(
-          'origin-center transition',
-          open && 'scale-90 opacity-0'
+          "origin-center transition",
+          open && "scale-90 opacity-0"
         )}
       />
       <path
         d="M2 2L12 12M12 2L2 12"
         className={clsx(
-          'origin-center transition',
-          !open && 'scale-90 opacity-0'
+          "origin-center transition",
+          !open && "scale-90 opacity-0"
         )}
       />
     </svg>
-  )
+  );
 }
 
 function MobileNavigation() {
@@ -96,18 +96,18 @@ function MobileNavigation() {
         </Transition.Child>
       </Transition.Root>
     </Popover>
-  )
+  );
 }
 
 export function Header() {
   const { data: sessionData } = useSession();
 
   return (
-    <header className="py-10">
+    <header className="py-5">
       <Container>
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center md:gap-x-12">
-            <Link href="#" aria-label="Home">
+            <Link href="/" aria-label="Home">
               <Logo className="h-10 w-auto" />
             </Link>
             <div className="hidden md:flex md:gap-x-6">
@@ -120,17 +120,22 @@ export function Header() {
             <div className="hidden md:block">
               {/* <NavLink href="/login">Sign in</NavLink> */}
               <button
-        className="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-       </button>
+                className="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                onClick={
+                  sessionData ? () => void signOut() : () => void signIn()
+                }
+              >
+                {sessionData ? "Sign out" : "Sign in"}
+              </button>
             </div>
             <Button href={sessionData ? "/family" : "/register"} color="blue">
-              {sessionData ? (<span>My Family</span>) : 
-              (<span>
-                Get started <span className="hidden lg:inline">today</span>
-              </span>)}
+              {sessionData ? (
+                <span>My Family</span>
+              ) : (
+                <span>
+                  Get started <span className="hidden lg:inline">today</span>
+                </span>
+              )}
             </Button>
             <div className="-mr-1 md:hidden">
               <MobileNavigation />
@@ -139,5 +144,5 @@ export function Header() {
         </nav>
       </Container>
     </header>
-  )
+  );
 }

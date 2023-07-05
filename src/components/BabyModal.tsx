@@ -16,17 +16,37 @@ export default function BabyModal({ onClose }: Props) {
   const [open, setOpen] = useState(true);
   const [file, setFile] = useState<File | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
-  const dateOfBirthRef = useRef<HTMLInputElement>(null);
+  const birthDateRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
 
   const { data: sessionData } = useSession();
 
+  const newBaby = api.baby.addBaby.useMutation();
+
   const addBaby = () => {
-    uploadToS3(file!);
+    if (
+      !nameRef.current?.value ||
+      !birthDateRef.current?.value ||
+      !imageRef.current?.value ||
+      !sessionData?.user?.id
+    ) {
+      console.log("missing data");
+      return;
+    }
+    const imageKey = `${sessionData?.user?.id}-${nameRef.current?.value}`;
+    newBaby.mutate({
+      userId: sessionData?.user?.id,
+      name: nameRef.current?.value,
+      image: imageKey,
+      birthDate: new Date(birthDateRef.current?.value),
+    });
+    uploadToS3(file!, imageKey);
+
     onClose();
   };
 
-  const uploadToS3 = (file: File) => {
+  const uploadToS3 = (file: File, imageKey: string) => {
+    console.log("s3");
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = async () => {
@@ -35,10 +55,10 @@ export default function BabyModal({ onClose }: Props) {
         console.error("AWS bucket name is not defined");
         return;
       }
-
+      console.log(imageKey);
       const params: AWS.S3.PutObjectRequest = {
         Bucket: bucketName,
-        Key: file.name,
+        Key: imageKey,
         Body: Buffer.from(reader.result as ArrayBuffer),
       };
 
@@ -113,7 +133,7 @@ export default function BabyModal({ onClose }: Props) {
                       </label>
                       <div className="mt-1">
                         <input
-                          ref={dateOfBirthRef}
+                          ref={birthDateRef}
                           type="date"
                           name="dateOfBirth"
                           id="dateOfBirth"
