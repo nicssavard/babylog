@@ -1,19 +1,22 @@
 import Image from "next/image";
 
 interface Props {
-  baby: {
-    name: string;
-    birthDate: Date;
-    image: string;
-  };
+  baby: Baby;
+  selectBaby: (baby: Baby) => void;
 }
 
-export default function Baby({ baby }: Props) {
+export default function Baby({ baby, selectBaby }: Props) {
+  const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME
+    ? process.env.NEXT_PUBLIC_AWS_BUCKET_NAME
+    : "default-bucket-name";
   return (
-    <div className="cursor-pointer hover:opacity-90">
+    <div
+      className="cursor-pointer hover:opacity-90"
+      onClick={() => selectBaby(baby)}
+    >
       <Image
         className=" mx-4 h-16 w-16 rounded-full"
-        src={`https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.amazonaws.com/${baby.image}`}
+        src={`https://${bucketName}.s3.amazonaws.com/${baby.image}`}
         alt="My Image"
         width={100}
         height={100}

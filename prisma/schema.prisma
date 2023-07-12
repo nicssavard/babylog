@@ -73,4 +73,17 @@ model Baby {
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String
     @@index([userId])
+    sleeps   Sleep[]
+}
+
+model Sleep {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    start DateTime
+    end DateTime
+    baby Baby @relation(fields: [babyId], references: [id], onDelete: Cascade)
+    babyId String
+
+    @@index([babyId])
 }

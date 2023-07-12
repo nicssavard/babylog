@@ -5,13 +5,16 @@ import BabyModal from "./BabyModal";
 import { useState } from "react";
 import ListBabies from "./ListBabies";
 
-export default function Babies() {
+interface BabiesProps {
+  selectBaby: (baby: Baby) => void;
+}
+export default function Babies({ selectBaby }: BabiesProps) {
   const [babyModal, setBabyModal] = useState(false);
 
   return (
     <Container className="mx-auto">
       <div className="mx-auto flex flex-row justify-center">
-        <ListBabies />
+        <ListBabies selectBaby={selectBaby} />
         <Button
           onClick={() => setBabyModal(true)}
           color="blue"
