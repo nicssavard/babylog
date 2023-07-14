@@ -5,3 +5,11 @@ type Baby = {
   image: string;
   userId: string;
 };
+
+type Sleep = {
+  id: string;
+  babyId: string;
+  milk: number;
+  start: Date;
+  end: Date;
+};

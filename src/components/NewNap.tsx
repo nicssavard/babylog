@@ -5,7 +5,7 @@ import { api } from "~/utils/api";
 interface Props {
   baby: Baby;
 }
-export default function NewSleep({ baby }: Props) {
+export default function NewNap({ baby }: Props) {
   const dateRef = useRef<HTMLInputElement>(null);
   const sleepStartRef = useRef<HTMLInputElement>(null);
   const sleepEndRef = useRef<HTMLInputElement>(null);
@@ -20,8 +20,8 @@ export default function NewSleep({ baby }: Props) {
 
     const today = `${year}-${month}-${day}`;
 
-    const startTime = "20:00";
-    const endTime = "07:00";
+    const startTime = "13:00";
+    const endTime = "15:00";
 
     if (sleepStartRef.current) {
       sleepStartRef.current.value = startTime;

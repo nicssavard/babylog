@@ -74,6 +74,7 @@ model Baby {
     userId    String
     @@index([userId])
     sleeps   Sleep[]
+    naps     Nap[]
 }
 
 model Sleep {
@@ -82,6 +83,19 @@ model Sleep {
     updatedAt DateTime @updatedAt
     start DateTime
     end DateTime
+    milk Int @default(0)
+    baby Baby @relation(fields: [babyId], references: [id], onDelete: Cascade)
+    babyId String
+
+    @@index([babyId])
+}
+
+model Nap {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    date DateTime
+    duration Int
     baby Baby @relation(fields: [babyId], references: [id], onDelete: Cascade)
     babyId String
 

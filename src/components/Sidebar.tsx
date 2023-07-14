@@ -11,7 +11,9 @@ import type { GetServerSideProps } from "next";
 //import AdminSubject from "../components/admin/AdminSubjects";
 
 const navigation = [
-  { name: "New Data", href: "#", icon: HomeIcon, current: true },
+  { name: "Night", href: "#", icon: HomeIcon, current: true },
+  { name: "Nap", href: "#", icon: HomeIcon, current: true },
+  { name: "Data", href: "#", icon: HomeIcon, current: true },
   { name: "Display Data", href: "#", icon: UsersIcon, current: false },
   // { name: "Projects", href: "#", icon: FolderIcon, current: false },
   // { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
