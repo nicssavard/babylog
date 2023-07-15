@@ -1,7 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
 
-export const sleepRouter = createTRPCRouter({
+export const chartRouter = createTRPCRouter({
   getSleeps: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.sleep.findMany();
   }),
@@ -44,5 +44,15 @@ export const sleepRouter = createTRPCRouter({
           id: input.sleep_id,
         },
       });
+    }),
+  getSleepDurationByBedTimeChart: publicProcedure
+    .input(z.object({ baby_id: z.string() }))
+    .query(({ ctx, input }) => {
+      const sleeps = ctx.prisma.sleep.findMany({
+        where: {
+          babyId: input.baby_id,
+        },
+      });
+      return "hello";
     }),
 });

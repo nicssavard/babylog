@@ -54,11 +54,15 @@ export default function NewSleep({ baby }: Props) {
     );
     sleepEnd.setDate(sleepEnd.getDate() + 1);
 
+    const sleepDurationMinutes =
+      (sleepEnd.getTime() - sleepStart.getTime()) / 1000 / 60;
+
     newSleep.mutate({
       babyId: baby.id,
       sleepStart: sleepStart,
       sleepEnd: sleepEnd,
       milk: parseInt(milkRef.current?.value || "0"),
+      durationMinutes: sleepDurationMinutes,
     });
   };
 

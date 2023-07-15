@@ -1,17 +1,17 @@
 import { Button } from "./Button";
 import { api } from "~/utils/api";
-import Sleep from "./Sleep";
+import Nap from "./Nap";
 
 interface Props {
   baby: Baby;
   setContent: (content: string) => void;
 }
-export default function SleepData({ baby, setContent }: Props) {
-  const { data: sleep } = api.sleep.getSleepByBaby.useQuery({
+export default function NapData({ baby, setContent }: Props) {
+  const { data: naps } = api.nap.getNapByBaby.useQuery({
     baby_id: baby.id,
   });
 
-  const addSleep = (content: string) => {
+  const addNap = (content: string) => {
     setContent(content);
   };
 
@@ -20,15 +20,15 @@ export default function SleepData({ baby, setContent }: Props) {
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900">
-            Sleep
+            Nap
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the sleep nights for {baby.name}.
+            A list of all the naps for {baby.name}.
           </p>
         </div>
         <div
           className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none"
-          onClick={() => addSleep("Night")}
+          onClick={() => addNap("Nap")}
         >
           <Button color="blue" type="button">
             <span className="text-white">Add</span>
@@ -77,8 +77,8 @@ export default function SleepData({ baby, setContent }: Props) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {sleep?.map((sleep) => (
-                  <Sleep key={sleep.id} sleep={sleep} />
+                {naps?.map((nap) => (
+                  <Nap key={nap.id} nap={nap} />
                 ))}
               </tbody>
             </table>

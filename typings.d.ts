@@ -12,4 +12,14 @@ type Sleep = {
   milk: number;
   start: Date;
   end: Date;
+  durationMinutes: number;
+};
+
+type Nap = {
+  id: string;
+  babyId: string;
+  milk: number;
+  start: Date;
+  end: Date;
+  durationMinutes: number;
 };

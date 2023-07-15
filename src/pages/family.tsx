@@ -19,7 +19,9 @@ export default function Family() {
           <Babies selectBaby={selectBaby} selectedBaby={baby} />
           {content === "Night" && baby && <NewSleep baby={baby} />}
           {content === "Nap" && baby && <NewNap baby={baby} />}
-          {content === "Data" && baby && <Data baby={baby} />}
+          {content === "Data" && baby && (
+            <Data baby={baby} setContent={setContent} />
+          )}
           {content === "Display Data" && <DisplayData />}
         </div>
       </div>

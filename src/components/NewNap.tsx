@@ -7,10 +7,10 @@ interface Props {
 }
 export default function NewNap({ baby }: Props) {
   const dateRef = useRef<HTMLInputElement>(null);
-  const sleepStartRef = useRef<HTMLInputElement>(null);
-  const sleepEndRef = useRef<HTMLInputElement>(null);
+  const napStartRef = useRef<HTMLInputElement>(null);
+  const napEndRef = useRef<HTMLInputElement>(null);
   const milkRef = useRef<HTMLInputElement>(null);
-  const newSleep = api.sleep.addSleep.useMutation();
+  const newNap = api.nap.addNap.useMutation();
 
   useEffect(() => {
     const date = new Date();
@@ -23,11 +23,11 @@ export default function NewNap({ baby }: Props) {
     const startTime = "13:00";
     const endTime = "15:00";
 
-    if (sleepStartRef.current) {
-      sleepStartRef.current.value = startTime;
+    if (napStartRef.current) {
+      napStartRef.current.value = startTime;
     }
-    if (sleepEndRef.current) {
-      sleepEndRef.current.value = endTime;
+    if (napEndRef.current) {
+      napEndRef.current.value = endTime;
     }
     if (dateRef.current) {
       dateRef.current.value = today;
@@ -36,29 +36,32 @@ export default function NewNap({ baby }: Props) {
       milkRef.current.value = "0";
     }
   }, []);
-  const addSleep = () => {
+  const addNap = () => {
     if (
-      !sleepStartRef.current?.value ||
-      !sleepEndRef.current?.value ||
+      !napStartRef.current?.value ||
+      !napEndRef.current?.value ||
       !dateRef.current?.value
     ) {
       console.log("missing data");
       return;
     }
 
-    const sleepStart = new Date(
-      `${dateRef.current?.value} ${sleepStartRef.current?.value}`
+    const napStart = new Date(
+      `${dateRef.current?.value} ${napStartRef.current?.value}`
     );
-    const sleepEnd = new Date(
-      `${dateRef.current?.value} ${sleepEndRef.current?.value}`
+    const napEnd = new Date(
+      `${dateRef.current?.value} ${napEndRef.current?.value}`
     );
-    sleepEnd.setDate(sleepEnd.getDate() + 1);
 
-    newSleep.mutate({
+    const sleepDurationMinutes =
+      (napEnd.getTime() - napStart.getTime()) / 1000 / 60;
+
+    newNap.mutate({
       babyId: baby.id,
-      sleepStart: sleepStart,
-      sleepEnd: sleepEnd,
+      napStart: napStart,
+      napEnd: napEnd,
       milk: parseInt(milkRef.current?.value || "0"),
+      durationMinutes: sleepDurationMinutes,
     });
   };
 
@@ -67,7 +70,7 @@ export default function NewNap({ baby }: Props) {
       <form>
         <div className="flex flex-col">
           <div>
-            <h2 className="text-xl font-medium text-gray-700">Add Sleep</h2>
+            <h2 className="text-xl font-medium text-gray-700">Add Nap</h2>
           </div>
           <div className="mt-2">
             <label className="block text-sm font-medium text-gray-700">
@@ -87,7 +90,7 @@ export default function NewNap({ baby }: Props) {
             </label>
             <div className="mt-1">
               <input
-                ref={sleepStartRef}
+                ref={napStartRef}
                 type="time"
                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 placeholder="Baby's name"
@@ -100,7 +103,7 @@ export default function NewNap({ baby }: Props) {
             </label>
             <div className="mt-1">
               <input
-                ref={sleepEndRef}
+                ref={napEndRef}
                 type="time"
                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               />
@@ -122,8 +125,8 @@ export default function NewNap({ baby }: Props) {
             </div>
           </div>
           <div className="mt-2 flex flex-row">
-            <Button color="blue" type="button" onClick={addSleep}>
-              <span className="text-white">Add Sleep</span>
+            <Button color="blue" type="button" onClick={addNap}>
+              <span className="text-white">Add Nap</span>
             </Button>
           </div>
         </div>
