@@ -1,7 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
+import { api } from "~/utils/api";
 
-export default function SleepDurationByBedTimeChart() {
+interface Props {
+  selectedBaby: Baby;
+}
+export default function SleepDurationByBedTimeChart({ selectedBaby }: Props) {
+  const { data: data } = api.chart.getSleepDurationByBedTimeChart.useQuery({
+    baby_id: selectedBaby.id,
+  });
+  console.log(data);
   const chartRef = useRef(null);
   const chartInstanceRef = useRef<Chart<"line", number[], string> | undefined>(
     undefined
@@ -15,16 +23,17 @@ export default function SleepDurationByBedTimeChart() {
 
       chartInstanceRef.current = new Chart(chartRef.current, {
         type: "line",
-        data: {
-          labels: ["6pm", "7pm", "8pm", "9pm", "10pm", "11pm"],
-          datasets: [
-            {
-              label: "sleep duration (h)",
-              data: [12, 10, 9, 9.5, 10, 11],
-              borderWidth: 1,
-            },
-          ],
-        },
+        data: data || { labels: [], datasets: [] }, // Ensure that data is always defined,
+        // data: {
+        //   labels: ["6pm", "7pm", "8pm", "9pm", "10pm", "11pm"],
+        //   datasets: [
+        //     {
+        //       label: "sleep duration (h)",
+        //       data: [12, 10, 9, 9.5, 10, 11],
+        //       borderWidth: 1,
+        //     },
+        //   ],
+        // },
         options: {
           scales: {
             y: {
@@ -34,7 +43,7 @@ export default function SleepDurationByBedTimeChart() {
         },
       });
     }
-  }, []);
+  }, [data]);
 
   return <canvas ref={chartRef} />;
 }

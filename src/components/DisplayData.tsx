@@ -2,10 +2,15 @@ import ListSleep from "./ListSleep";
 import { api } from "~/utils/api";
 import SleepDurationByBedTimeChart from "./charts/SleepDurationByBedTimeChart";
 
-export default function DisplayData() {
+interface Props {
+  selectedBaby?: Baby;
+}
+export default function DisplayData({ selectedBaby }: Props) {
   return (
     <div>
-      <SleepDurationByBedTimeChart />
+      {selectedBaby && (
+        <SleepDurationByBedTimeChart selectedBaby={selectedBaby} />
+      )}
     </div>
   );
 }

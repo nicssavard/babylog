@@ -22,7 +22,7 @@ export default function Family() {
           {content === "Data" && baby && (
             <Data baby={baby} setContent={setContent} />
           )}
-          {content === "Display Data" && <DisplayData />}
+          {content === "Display Data" && <DisplayData selectedBaby={baby} />}
         </div>
       </div>
     </>

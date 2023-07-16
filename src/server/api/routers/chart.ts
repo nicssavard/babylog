@@ -2,57 +2,72 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
 
 export const chartRouter = createTRPCRouter({
-  getSleeps: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.sleep.findMany();
-  }),
-  getSleepByBaby: publicProcedure
-    .input(z.object({ baby_id: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.sleep.findMany({
-        where: {
-          babyId: input.baby_id,
-        },
-      });
-    }),
-  addSleep: publicProcedure
-    .input(
-      z.object({
-        babyId: z.string(),
-        milk: z.number(),
-        sleepStart: z.date(),
-        sleepEnd: z.date(),
-        durationMinutes: z.number(),
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      ctx.prisma.baby;
-      return ctx.prisma.sleep.create({
-        data: {
-          babyId: input.babyId,
-          milk: input.milk,
-          start: input.sleepStart,
-          end: input.sleepEnd,
-          durationMinutes: input.durationMinutes,
-        },
-      });
-    }),
-  deleteSleep: publicProcedure
-    .input(z.object({ sleep_id: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.sleep.delete({
-        where: {
-          id: input.sleep_id,
-        },
-      });
-    }),
   getSleepDurationByBedTimeChart: publicProcedure
     .input(z.object({ baby_id: z.string() }))
-    .query(({ ctx, input }) => {
-      const sleeps = ctx.prisma.sleep.findMany({
+    .query(async ({ ctx, input }) => {
+      const sleeps = await ctx.prisma.sleep.findMany({
         where: {
           babyId: input.baby_id,
         },
       });
-      return "hello";
+
+      const sleepTime: Array<string> = [
+        "0am",
+        "1am",
+        "2am",
+        "3am",
+        "4am",
+        "5am",
+        "6am",
+        "7am",
+        "8am",
+        "9am",
+        "10am",
+        "11am",
+        "12pm",
+        "13pm",
+        "14pm",
+        "15pm",
+        "16pm",
+        "17pm",
+        "18pm",
+        "19pm",
+        "20pm",
+        "21pm",
+        "22pm",
+        "23pm",
+      ];
+      const sleepDurations: number[] = Array(24).fill(0) as number[];
+      const sleepAmount: number[] = Array(24).fill(0) as number[];
+      const sleepAverage: number[] = Array(24).fill(0) as number[];
+
+      sleeps.forEach((sleep) => {
+        const sleepStart = sleep.start.getHours();
+        const sleepDuration = sleep.durationMinutes;
+        sleepDurations[sleepStart] += sleepDuration;
+        sleepAmount[sleepStart] += 1;
+      });
+
+      sleepDurations.forEach((duration, index) => {
+        if (sleepAmount[index] === 0) {
+          sleepAverage[index] = 0;
+        } else if (sleepAmount[index] != undefined && duration != undefined) {
+          //Tried to test for undiefined but it still gives me an error
+          // eslint-disable-next-line
+          // @ts-ignore
+          sleepAverage[index] = duration / sleepAmount[index];
+        }
+      });
+
+      return {
+        labels: sleepTime.slice(18, 24), //slice to only show 6 hours from 18pm to 24pm
+        datasets: [
+          {
+            label: "sleep duration (min)",
+            data: sleepAverage.slice(18, 24), //slice to only show 6 hours from 18pm to 24pm
+            borderWidth: 1,
+          },
+        ],
+      };
     }),
 });
