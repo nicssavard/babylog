@@ -1,11 +1,10 @@
 import { useRef, useEffect } from "react";
 import { Button } from "./Button";
 import { api } from "~/utils/api";
+import useStore from "~/store/userStore";
 
-interface Props {
-  baby: Baby;
-}
-export default function NewNap({ baby }: Props) {
+export default function NewNap() {
+  const baby = useStore((state) => state.baby);
   const dateRef = useRef<HTMLInputElement>(null);
   const napStartRef = useRef<HTMLInputElement>(null);
   const napEndRef = useRef<HTMLInputElement>(null);
@@ -38,6 +37,7 @@ export default function NewNap({ baby }: Props) {
   }, []);
   const addNap = () => {
     if (
+      !baby ||
       !napStartRef.current?.value ||
       !napEndRef.current?.value ||
       !dateRef.current?.value

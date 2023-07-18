@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import useStore from "~/store/userStore";
 import {
   Bars3BottomLeftIcon,
   HomeIcon,
@@ -25,13 +26,10 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-interface Props {
-  setContent: (content: string) => void;
-  content: string;
-}
-export default function Sidebar({ setContent, content }: Props): JSX.Element {
+export default function Sidebar(): JSX.Element {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  //const [content, setContent] = useState("Subject");
+  const content = useStore((state) => state.content);
+  const setContent = useStore((state) => state.setContent);
   return (
     <>
       {/*

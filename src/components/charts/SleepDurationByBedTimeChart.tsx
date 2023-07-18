@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import { api } from "~/utils/api";
+import useStore from "~/store/userStore";
 
-interface Props {
-  selectedBaby: Baby;
-}
-export default function SleepDurationByBedTimeChart({ selectedBaby }: Props) {
+export default function SleepDurationByBedTimeChart() {
+  const baby = useStore((state) => state.baby);
   const { data: data } = api.chart.getSleepDurationByBedTimeChart.useQuery({
-    baby_id: selectedBaby.id,
+    baby_id: baby?.id || "",
   });
   console.log(data);
   const chartRef = useRef(null);
@@ -23,17 +22,7 @@ export default function SleepDurationByBedTimeChart({ selectedBaby }: Props) {
 
       chartInstanceRef.current = new Chart(chartRef.current, {
         type: "line",
-        data: data || { labels: [], datasets: [] }, // Ensure that data is always defined,
-        // data: {
-        //   labels: ["6pm", "7pm", "8pm", "9pm", "10pm", "11pm"],
-        //   datasets: [
-        //     {
-        //       label: "sleep duration (h)",
-        //       data: [12, 10, 9, 9.5, 10, 11],
-        //       borderWidth: 1,
-        //     },
-        //   ],
-        // },
+        data: data || { labels: [], datasets: [] }, // Ensure that data is always defined, otherwise Chart.js throws an error
         options: {
           scales: {
             y: {

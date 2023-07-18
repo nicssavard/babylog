@@ -1,12 +1,14 @@
 import Image from "next/image";
+import useStore from "~/store/userStore";
 
 interface Props {
   baby: Baby;
-  selectBaby: (baby: Baby) => void;
-  selectedBaby?: Baby;
 }
 
-export default function Baby({ baby, selectBaby, selectedBaby }: Props) {
+export default function Baby({ baby }: Props) {
+  const selectedBaby = useStore((state) => state.baby);
+  const setBaby = useStore((state) => state.setBaby);
+
   const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME
     ? process.env.NEXT_PUBLIC_AWS_BUCKET_NAME
     : "default-bucket-name";
@@ -15,7 +17,7 @@ export default function Baby({ baby, selectBaby, selectedBaby }: Props) {
   return (
     <div
       className="flex cursor-pointer items-center hover:opacity-90"
-      onClick={() => selectBaby(baby)}
+      onClick={() => setBaby(baby)}
     >
       <Image
         className={`${imageSize}   rounded-full`}

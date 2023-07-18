@@ -7,6 +7,7 @@ import { useRef } from "react";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import AWS from "aws-sdk";
+import { get } from "http";
 
 interface Props {
   onClose: () => void;
@@ -15,6 +16,7 @@ interface Props {
 export default function BabyModal({ onClose }: Props) {
   const [open, setOpen] = useState(true);
   const [file, setFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null); // Add this line
   const nameRef = useRef<HTMLInputElement>(null);
   const birthDateRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
@@ -22,28 +24,40 @@ export default function BabyModal({ onClose }: Props) {
   const { data: sessionData } = useSession();
 
   const newBaby = api.baby.addBaby.useMutation();
+  const { data: presignedUrl } = api.baby.getPresignedUrl.useQuery({
+    fileName: fileName || "default",
+  });
 
   const addBaby = () => {
-    if (
-      !nameRef.current?.value ||
-      !birthDateRef.current?.value ||
-      !imageRef.current?.value ||
-      !sessionData?.user?.id
-    ) {
-      console.log("missing data");
-      return;
-    }
     const imageKey = `${sessionData?.user?.id}-${nameRef.current?.value}`;
-    newBaby.mutate({
-      userId: sessionData?.user?.id,
-      name: nameRef.current?.value,
-      image: imageKey,
-      birthDate: new Date(birthDateRef.current?.value),
-    });
-    uploadToS3(file!, imageKey);
 
-    onClose();
+    if (imageKey) {
+      console.log(imageKey);
+      setFileName("test"); // This will trigger the useQuery hook to run
+    }
+    console.log(presignedUrl);
   };
+  // const addBaby = () => {
+  //   if (
+  //     !nameRef.current?.value ||
+  //     !birthDateRef.current?.value ||
+  //     !imageRef.current?.value ||
+  //     !sessionData?.user?.id
+  //   ) {
+  //     console.log("missing data");
+  //     return;
+  //   }
+  //   const imageKey = `${sessionData?.user?.id}-${nameRef.current?.value}`;
+  //   newBaby.mutate({
+  //     userId: sessionData?.user?.id,
+  //     name: nameRef.current?.value,
+  //     image: imageKey,
+  //     birthDate: new Date(birthDateRef.current?.value),
+  //   });
+  //   uploadToS3(file!, imageKey);
+
+  //   onClose();
+  // };
 
   const uploadToS3 = (file: File, imageKey: string) => {
     console.log("s3");

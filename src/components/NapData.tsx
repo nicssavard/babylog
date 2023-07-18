@@ -1,14 +1,13 @@
 import { Button } from "./Button";
 import { api } from "~/utils/api";
 import Nap from "./Nap";
+import useStore from "~/store/userStore";
 
-interface Props {
-  baby: Baby;
-  setContent: (content: string) => void;
-}
-export default function NapData({ baby, setContent }: Props) {
+export default function NapData() {
+  const baby = useStore((state) => state.baby);
+  const setContent = useStore((state) => state.setContent);
   const { data: naps } = api.nap.getNapByBaby.useQuery({
-    baby_id: baby.id,
+    baby_id: baby?.id || "",
   });
 
   const addNap = (content: string) => {
@@ -23,7 +22,7 @@ export default function NapData({ baby, setContent }: Props) {
             Nap
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the naps for {baby.name}.
+            A list of all the naps for {baby?.name}.
           </p>
         </div>
         <div

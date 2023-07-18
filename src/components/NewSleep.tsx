@@ -1,11 +1,10 @@
 import { useRef, useEffect } from "react";
 import { Button } from "./Button";
 import { api } from "~/utils/api";
+import useStore from "~/store/userStore";
 
-interface Props {
-  baby: Baby;
-}
-export default function NewSleep({ baby }: Props) {
+export default function NewSleep() {
+  const baby = useStore((state) => state.baby);
   const dateRef = useRef<HTMLInputElement>(null);
   const sleepStartRef = useRef<HTMLInputElement>(null);
   const sleepEndRef = useRef<HTMLInputElement>(null);
@@ -38,6 +37,7 @@ export default function NewSleep({ baby }: Props) {
   }, []);
   const addSleep = () => {
     if (
+      !baby ||
       !sleepStartRef.current?.value ||
       !sleepEndRef.current?.value ||
       !dateRef.current?.value

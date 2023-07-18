@@ -37,6 +37,7 @@ export const chartRouter = createTRPCRouter({
         "22pm",
         "23pm",
       ];
+      //initialize arrays with 0 for each hour of the day
       const sleepDurations: number[] = Array(24).fill(0) as number[];
       const sleepAmount: number[] = Array(24).fill(0) as number[];
       const sleepAverage: number[] = Array(24).fill(0) as number[];
@@ -55,7 +56,7 @@ export const chartRouter = createTRPCRouter({
           //Tried to test for undiefined but it still gives me an error
           // eslint-disable-next-line
           // @ts-ignore
-          sleepAverage[index] = duration / sleepAmount[index];
+          sleepAverage[index] = duration / sleepAmount[index] / 60;
         }
       });
 
