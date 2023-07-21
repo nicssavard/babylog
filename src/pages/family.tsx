@@ -6,6 +6,7 @@ import NewNap from "~/components/NewNap";
 import Data from "~/components/Data";
 import DisplayData from "~/components/DisplayData";
 import useStore from "~/store/userStore";
+import { Header } from "~/components/Header";
 
 export default function Family() {
   const baby = useStore((state) => state.baby);
@@ -15,6 +16,7 @@ export default function Family() {
   if (!baby)
     return (
       <>
+        <Header />
         <div className="mt-8 flex flex-row">
           <Sidebar />
           <div className="flex w-full flex-col items-center">
@@ -26,6 +28,7 @@ export default function Family() {
     );
   return (
     <>
+      <Header />
       <div className="mt-8 flex flex-row">
         <Sidebar />
         <div className="flex w-full flex-col items-center">

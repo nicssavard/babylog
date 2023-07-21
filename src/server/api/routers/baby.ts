@@ -2,7 +2,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
 import AWS from "aws-sdk";
 
-export const babiesRouter = createTRPCRouter({
+export const babyRouter = createTRPCRouter({
   getBabies: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.baby.findMany();
   }),
