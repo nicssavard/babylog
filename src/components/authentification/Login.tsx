@@ -1,37 +1,39 @@
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useRef } from "react";
-import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { AuthLayout } from "../AuthLayout";
 import { Button } from "../Button";
-import { TextField } from "../Fields";
 
 interface Props {
   toggleLogin: () => void;
 }
 export default function Login({ toggleLogin }: Props) {
-  //ref for username and password input
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const [isInvalid, setIsInvalid] = useState(false);
+  //const [isInvalid, setIsInvalid] = useState(false);
   const router = useRouter();
 
-  const loginHandler = async (e: any) => {
+  const loginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(emailRef.current?.value);
-    console.log(passwordRef.current?.value);
-    const user = await signIn("credentials", {
-      email: emailRef.current?.value,
-      password: passwordRef.current?.value,
-      //redirect to home page after successfull login
-      redirect: false,
-    });
-    if (user?.error) {
-      setIsInvalid(true);
-    } else {
-      router.push("/family");
+
+    try {
+      const user = await signIn("credentials", {
+        email: emailRef.current?.value,
+        password: passwordRef.current?.value,
+        redirect: false,
+      });
+
+      if (user?.error) {
+        //setIsInvalid(true);
+      } else {
+        await router.push("/family").then(() => {
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      console.error("An error occurred during sign in:", error);
     }
   };
 
@@ -70,7 +72,10 @@ export default function Login({ toggleLogin }: Props) {
           </div>
         </div>
         <form
-          onSubmit={(e) => loginHandler(e)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            void loginHandler(e); // added void here
+          }}
           className="mt-10 grid grid-cols-1 gap-y-8"
         >
           <div className="col-span-full">

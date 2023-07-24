@@ -21,7 +21,7 @@ export const userRouter = createTRPCRouter({
         password: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       const saltRounds = 10;
       const myPlaintextPassword = input.password;
 
