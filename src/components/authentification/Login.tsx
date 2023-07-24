@@ -1,7 +1,6 @@
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useRef } from "react";
-import { useState } from "react";
 import { useRouter } from "next/router";
 import { AuthLayout } from "../AuthLayout";
 import { Button } from "../Button";

@@ -65,7 +65,7 @@ export const chartRouter = createTRPCRouter({
         datasets: [
           {
             label: "sleep duration (min)",
-            data: sleepAverage.slice(18, 24), //slice to only show 6 hours from 18pm to 24pm
+            data: [3, 4, 2, 54, 4, 4], //slice to only show 6 hours from 18pm to 24pm
             borderWidth: 1,
           },
         ],
