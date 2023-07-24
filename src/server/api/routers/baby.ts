@@ -2,6 +2,12 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
 import AWS from "aws-sdk";
 
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
 export const babyRouter = createTRPCRouter({
   getBabies: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.baby.findMany();
@@ -34,7 +40,7 @@ export const babyRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       console.log(input.fileName);
       console.log("createPresignedUrl");
-      AWS.config.region = process.env.AWS_REGION;
+      //AWS.config.region = process.env.AWS_REGION;
       const s3 = new AWS.S3();
       const presignedURL = s3.getSignedUrl("putObject", {
         Bucket: process.env.AWS_BUCKET_NAME,

@@ -1,3 +1,11 @@
+type User = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  image: string | null;
+};
+
 type Baby = {
   id: string;
   name: string;

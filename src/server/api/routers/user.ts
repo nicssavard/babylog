@@ -3,6 +3,15 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 
 export const userRouter = createTRPCRouter({
+  getUserByEmail: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+    }),
   addUser: publicProcedure
     .input(
       z.object({

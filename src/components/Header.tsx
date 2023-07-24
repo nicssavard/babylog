@@ -8,6 +8,8 @@ import { Container } from "@/components/Container";
 import { Logo } from "@/components/Logo";
 import { NavLink } from "@/components/NavLink";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { api } from "~/utils/api";
+import useStore from "~/store/userStore";
 
 type MobileNavLinkProps = {
   href: string;
@@ -101,6 +103,14 @@ function MobileNavigation() {
 
 export function Header() {
   const { data: sessionData } = useSession();
+  const { data: user } = api.user.getUserByEmail.useQuery({
+    email: sessionData?.user?.email ? sessionData.user.email : "placeholder",
+  });
+  console.log(user);
+  const setUser = useStore((state) => state.setUser);
+  if (user) {
+    setUser(user);
+  }
 
   return (
     <header className="py-5">

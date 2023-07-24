@@ -7,7 +7,7 @@ import { useRef } from "react";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import AWS from "aws-sdk";
-import { get } from "http";
+import useStore from "~/store/userStore";
 
 interface Props {
   onClose: () => void;
@@ -20,7 +20,7 @@ export default function BabyModal({ onClose }: Props) {
   const nameRef = useRef<HTMLInputElement>(null);
   const birthDateRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
-
+  const user = useStore((state) => state.user);
   const { data: sessionData } = useSession();
 
   const newBaby = api.baby.addBaby.useMutation();
@@ -28,36 +28,61 @@ export default function BabyModal({ onClose }: Props) {
     fileName: fileName || "default",
   });
 
-  const addBaby = () => {
-    const imageKey = `${sessionData?.user?.id}-${nameRef.current?.value}`;
-
-    if (imageKey) {
-      console.log(imageKey);
-      setFileName("test"); // This will trigger the useQuery hook to run
-    }
-    console.log(presignedUrl);
-  };
   // const addBaby = () => {
-  //   if (
-  //     !nameRef.current?.value ||
-  //     !birthDateRef.current?.value ||
-  //     !imageRef.current?.value ||
-  //     !sessionData?.user?.id
-  //   ) {
-  //     console.log("missing data");
-  //     return;
+  //   const imageKey = `${user?.id}-${nameRef.current?.value}`;
+  //   if (imageKey) {
+  //     setFileName(imageKey); // This will trigger the useQuery hook to run
   //   }
-  //   const imageKey = `${sessionData?.user?.id}-${nameRef.current?.value}`;
-  //   newBaby.mutate({
-  //     userId: sessionData?.user?.id,
-  //     name: nameRef.current?.value,
-  //     image: imageKey,
-  //     birthDate: new Date(birthDateRef.current?.value),
-  //   });
-  //   uploadToS3(file!, imageKey);
-
-  //   onClose();
+  //   console.log(presignedUrl);
+  //   if (presignedUrl) {
+  //     uploadFile(presignedUrl, file!);
+  //   }
   // };
+
+  // const uploadFile = async (url: string, file: File): Promise<void> => {
+  //   console.log(url, file);
+  //   try {
+  //     const response = await fetch(url, {
+  //       method: "PUT",
+  //       body: file,
+  //       headers: {
+  //         "Content-Type": file.type,
+  //       },
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorBody = await response.text(); // Get response body as text
+  //       console.error("Error uploading file:", errorBody); // Log the error body
+  //       return;
+  //     }
+
+  //     console.log("File uploaded successfully");
+  //   } catch (err) {
+  //     console.error("Error during the request:", err);
+  //   }
+  // };
+
+  const addBaby = () => {
+    if (
+      !nameRef.current?.value ||
+      !birthDateRef.current?.value ||
+      !imageRef.current?.value ||
+      !user?.id
+    ) {
+      console.log("missing data");
+      return;
+    }
+    const imageKey = `${user?.id}-${nameRef.current?.value}`;
+    newBaby.mutate({
+      userId: user?.id,
+      name: nameRef.current?.value,
+      image: imageKey,
+      birthDate: new Date(birthDateRef.current?.value),
+    });
+    uploadToS3(file!, imageKey);
+
+    onClose();
+  };
 
   const uploadToS3 = (file: File, imageKey: string) => {
     console.log("s3");
