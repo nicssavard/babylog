@@ -1,6 +1,27 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
 
+const sleepTime = Array.from({ length: 24 }, (_, i) => i.toString()); // 0 to 23 hours
+
+const calculateAverageSleep = (sleeps: Sleep[]) => {
+  const sleepDurations = new Array(24).fill(0);
+  const sleepAmount = new Array(24).fill(0);
+
+  sleeps.forEach((sleep: Sleep) => {
+    const sleepStart = sleep.start.getHours();
+    const sleepDuration = sleep.durationMinutes;
+    sleepDurations[sleepStart] += sleepDuration;
+    sleepAmount[sleepStart] += 1;
+  });
+
+  return sleepDurations.map((duration, index) => {
+    if (sleepAmount[index] === 0) {
+      return 0;
+    }
+    return duration / sleepAmount[index] / 60;
+  });
+};
+
 export const chartRouter = createTRPCRouter({
   getSleepDurationByBedTimeChart: publicProcedure
     .input(z.object({ baby_id: z.string() }))
@@ -11,61 +32,14 @@ export const chartRouter = createTRPCRouter({
         },
       });
 
-      const sleepTime: Array<string> = [
-        "0am",
-        "1am",
-        "2am",
-        "3am",
-        "4am",
-        "5am",
-        "6am",
-        "7am",
-        "8am",
-        "9am",
-        "10am",
-        "11am",
-        "12pm",
-        "13pm",
-        "14pm",
-        "15pm",
-        "16pm",
-        "17pm",
-        "18pm",
-        "19pm",
-        "20pm",
-        "21pm",
-        "22pm",
-        "23pm",
-      ];
-      //initialize arrays with 0 for each hour of the day
-      const sleepDurations: number[] = Array(24).fill(0) as number[];
-      const sleepAmount: number[] = Array(24).fill(0) as number[];
-      const sleepAverage: number[] = Array(24).fill(0) as number[];
-
-      sleeps.forEach((sleep) => {
-        const sleepStart = sleep.start.getHours();
-        const sleepDuration = sleep.durationMinutes;
-        sleepDurations[sleepStart] += sleepDuration;
-        sleepAmount[sleepStart] += 1;
-      });
-
-      sleepDurations.forEach((duration, index) => {
-        if (sleepAmount[index] === 0) {
-          sleepAverage[index] = 0;
-        } else if (sleepAmount[index] != undefined && duration != undefined) {
-          //Tried to test for undiefined but it still gives me an error
-          // eslint-disable-next-line
-          // @ts-ignore
-          sleepAverage[index] = duration / sleepAmount[index] / 60;
-        }
-      });
+      const sleepAverage = calculateAverageSleep(sleeps);
 
       return {
-        labels: sleepTime.slice(18, 24), //slice to only show 6 hours from 18pm to 24pm
+        labels: sleepTime.slice(18), // slice to only show hours from 18 to 23
         datasets: [
           {
-            label: "sleep duration (min)",
-            data: [3, 4, 2, 54, 4, 4], //slice to only show 6 hours from 18pm to 24pm
+            label: "sleep duration by bed time",
+            data: sleepAverage.slice(18), // slice to only show hours from 18 to 23
             borderWidth: 1,
           },
         ],
