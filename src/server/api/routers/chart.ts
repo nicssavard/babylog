@@ -4,6 +4,7 @@ import { z } from "zod";
 const sleepTime = Array.from({ length: 24 }, (_, i) => i.toString()); // 0 to 23 hours
 
 const calculateAverageSleep = (sleeps: Sleep[]) => {
+  console.log(sleeps);
   const sleepDurations = new Array(24).fill(0);
   const sleepAmount = new Array(24).fill(0);
 
