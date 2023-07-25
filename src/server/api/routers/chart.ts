@@ -9,7 +9,7 @@ const calculateAverageSleep = (sleeps: Sleep[]) => {
   const sleepAmount = new Array(24).fill(0);
 
   sleeps.forEach((sleep: Sleep) => {
-    const sleepStart = sleep.start.getHours();
+    const sleepStart = new Date(sleep.start).getUTCHours();
     const sleepDuration = sleep.durationMinutes;
     sleepDurations[sleepStart] += sleepDuration;
     sleepAmount[sleepStart] += 1;
@@ -38,12 +38,12 @@ export const chartRouter = createTRPCRouter({
 
       const sleepAverage = calculateAverageSleep(sleeps);
       await new Promise((resolve) => setTimeout(resolve, 5000));
-      const data = sleepAverage.slice(18); // slice to only show hours from 18 to 23
+      const data = sleepAverage; // slice to only show hours from 18 to 23
       console.log(sleepAverage);
       console.log(data);
       //wait 5 second before returning the data
       return {
-        labels: sleepTime.slice(18), // slice to only show hours from 18 to 23
+        labels: sleepTime, // slice to only show hours from 18 to 23
         datasets: [
           {
             label: "sleep duration by bed time",
