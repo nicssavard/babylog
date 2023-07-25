@@ -16,13 +16,14 @@ const calculateAverageSleep = (sleeps: Sleep[]) => {
   });
   console.log(sleepDurations);
   console.log(sleepAmount);
-
-  return sleepDurations.map((duration, index) => {
+  const sleepAverage = sleepDurations.map((duration, index) => {
     if (sleepAmount[index] === 0) {
       return 0;
     }
     return duration / sleepAmount[index] / 60;
   });
+  console.log(sleepAverage);
+  return sleepAverage;
 };
 
 export const chartRouter = createTRPCRouter({
@@ -37,6 +38,7 @@ export const chartRouter = createTRPCRouter({
 
       const sleepAverage = calculateAverageSleep(sleeps);
 
+      console.log(sleepAverage);
       return {
         labels: sleepTime.slice(18), // slice to only show hours from 18 to 23
         datasets: [
