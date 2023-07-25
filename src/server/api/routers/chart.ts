@@ -38,14 +38,16 @@ export const chartRouter = createTRPCRouter({
 
       const sleepAverage = calculateAverageSleep(sleeps);
       await new Promise((resolve) => setTimeout(resolve, 5000));
+      const data = sleepAverage.slice(18); // slice to only show hours from 18 to 23
       console.log(sleepAverage);
+      console.log(data);
       //wait 5 second before returning the data
       return {
         labels: sleepTime.slice(18), // slice to only show hours from 18 to 23
         datasets: [
           {
             label: "sleep duration by bed time",
-            data: sleepAverage.slice(18), // slice to only show hours from 18 to 23
+            data: data, // slice to only show hours from 18 to 23
             borderWidth: 1,
           },
         ],
