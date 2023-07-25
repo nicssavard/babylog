@@ -14,6 +14,8 @@ const calculateAverageSleep = (sleeps: Sleep[]) => {
     sleepDurations[sleepStart] += sleepDuration;
     sleepAmount[sleepStart] += 1;
   });
+  console.log(sleepDurations);
+  console.log(sleepAmount);
 
   return sleepDurations.map((duration, index) => {
     if (sleepAmount[index] === 0) {
