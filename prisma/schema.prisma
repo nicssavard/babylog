@@ -98,7 +98,7 @@ model Sleep {
     end DateTime
     durationMinutes Int @default(0)
     milk Int @default(0)
-    baby Baby? @relation(fields: [babyId], references: [id], onDelete: Cascade)
+    baby Baby @relation(fields: [babyId], references: [id], onDelete: Cascade)
     babyId String
 
     @@index([babyId])

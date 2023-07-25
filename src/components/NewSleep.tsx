@@ -45,22 +45,45 @@ export default function NewSleep() {
       console.log("missing data");
       return;
     }
-
     const sleepStart = new Date(
       `${dateRef.current?.value} ${sleepStartRef.current?.value}`
     );
+    const utcSleepStart = new Date(
+      Date.UTC(
+        sleepStart.getFullYear(),
+        sleepStart.getMonth(),
+        sleepStart.getDate(),
+        sleepStart.getHours(),
+        sleepStart.getMinutes(),
+        sleepStart.getSeconds()
+      )
+    );
+
+    // const sleepStart = new Date(
+    //   `${dateRef.current?.value} ${sleepStartRef.current?.value}`
+    // );
+    console.log(sleepStart);
     const sleepEnd = new Date(
       `${dateRef.current?.value} ${sleepEndRef.current?.value}`
     );
     sleepEnd.setDate(sleepEnd.getDate() + 1);
-
+    const utcSleepEnd = new Date(
+      Date.UTC(
+        sleepEnd.getFullYear(),
+        sleepEnd.getMonth(),
+        sleepEnd.getDate(),
+        sleepEnd.getHours(),
+        sleepEnd.getMinutes(),
+        sleepEnd.getSeconds()
+      )
+    );
     const sleepDurationMinutes =
-      (sleepEnd.getTime() - sleepStart.getTime()) / 1000 / 60;
+      (utcSleepEnd.getTime() - utcSleepStart.getTime()) / 1000 / 60;
 
     newSleep.mutate({
       babyId: baby.id,
-      sleepStart: sleepStart,
-      sleepEnd: sleepEnd,
+      sleepStart: utcSleepStart,
+      sleepEnd: utcSleepEnd,
       milk: parseInt(milkRef.current?.value || "0"),
       durationMinutes: sleepDurationMinutes,
     });

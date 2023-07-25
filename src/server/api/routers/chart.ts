@@ -4,26 +4,22 @@ import { z } from "zod";
 const sleepTime = Array.from({ length: 24 }, (_, i) => i.toString()); // 0 to 23 hours
 
 const calculateAverageSleep = (sleeps: Sleep[]) => {
-  console.log(sleeps);
   const sleepDurations = new Array(24).fill(0);
   const sleepAmount = new Array(24).fill(0);
 
-  sleeps.forEach((sleep: Sleep) => {
-    const sleepStart = new Date(sleep.start).getUTCHours();
+  sleeps.forEach((sleep) => {
+    const sleepStart = sleep.start.getHours();
     const sleepDuration = sleep.durationMinutes;
     sleepDurations[sleepStart] += sleepDuration;
     sleepAmount[sleepStart] += 1;
   });
-  console.log(sleepDurations);
-  console.log(sleepAmount);
-  const sleepAverage = sleepDurations.map((duration, index) => {
+
+  return sleepDurations.map((duration, index) => {
     if (sleepAmount[index] === 0) {
       return 0;
     }
     return duration / sleepAmount[index] / 60;
   });
-  console.log(sleepAverage);
-  return sleepAverage;
 };
 
 export const chartRouter = createTRPCRouter({
@@ -37,17 +33,13 @@ export const chartRouter = createTRPCRouter({
       });
 
       const sleepAverage = calculateAverageSleep(sleeps);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      const data = sleepAverage; // slice to only show hours from 18 to 23
-      console.log(sleepAverage);
-      console.log(data);
-      //wait 5 second before returning the data
+
       return {
-        labels: sleepTime, // slice to only show hours from 18 to 23
+        labels: sleepTime.slice(18), // slice to only show hours from 18 to 23
         datasets: [
           {
             label: "sleep duration by bed time",
-            data: data, // slice to only show hours from 18 to 23
+            data: sleepAverage.slice(18), // slice to only show hours from 18 to 23
             borderWidth: 1,
           },
         ],
