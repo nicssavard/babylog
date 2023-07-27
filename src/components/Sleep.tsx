@@ -9,8 +9,8 @@ interface Props {
 export default function Sleep({ sleep }: Props) {
   const deleteSleep = api.sleep.deleteSleep.useMutation();
 
-  const sleepStart = moment(sleep.start).format("h:mm a");
-  const sleepEnd = moment(sleep.end).format("h:mm a");
+  const sleepStart = moment(sleep.start).utc().format("h:mm a");
+  const sleepEnd = moment(sleep.end).utc().format("h:mm a");
 
   const deleteSleepHandler = () => {
     deleteSleep.mutate({ sleep_id: sleep.id });

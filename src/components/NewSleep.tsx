@@ -59,10 +59,6 @@ export default function NewSleep() {
       )
     );
 
-    // const sleepStart = new Date(
-    //   `${dateRef.current?.value} ${sleepStartRef.current?.value}`
-    // );
-    console.log(sleepStart);
     const sleepEnd = new Date(
       `${dateRef.current?.value} ${sleepEndRef.current?.value}`
     );

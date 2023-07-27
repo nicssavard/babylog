@@ -8,7 +8,7 @@ const calculateAverageSleep = (sleeps: Sleep[]) => {
   const sleepAmount = new Array(24).fill(0);
 
   sleeps.forEach((sleep) => {
-    const sleepStart = sleep.start.getHours();
+    const sleepStart = sleep.start.getUTCHours();
     const sleepDuration = sleep.durationMinutes;
     sleepDurations[sleepStart] += sleepDuration;
     sleepAmount[sleepStart] += 1;

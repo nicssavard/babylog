@@ -9,8 +9,8 @@ interface Props {
 export default function Nap({ nap }: Props) {
   const deleteNap = api.nap.deleteNap.useMutation();
 
-  const napStart = moment(nap.start).format("h:mm a");
-  const napEnd = moment(nap.end).format("h:mm a");
+  const napStart = moment(nap.start).utc().format("h:mm a");
+  const napEnd = moment(nap.end).utc().format("h:mm a");
 
   const deleteNapHandler = () => {
     deleteNap.mutate({ nap_id: nap.id });

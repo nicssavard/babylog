@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { Button } from "./Button";
 import { api } from "~/utils/api";
 import useStore from "~/store/userStore";
+import { toast } from "react-hot-toast";
 
 export default function NewNap() {
   const baby = useStore((state) => state.baby);
@@ -9,7 +10,20 @@ export default function NewNap() {
   const napStartRef = useRef<HTMLInputElement>(null);
   const napEndRef = useRef<HTMLInputElement>(null);
   const milkRef = useRef<HTMLInputElement>(null);
-  const newNap = api.nap.addNap.useMutation();
+  //const newNap = api.nap.addNap.useMutation();
+  const {
+    mutate: newNap,
+    isLoading: isPosting,
+    isSuccess,
+  } = api.nap.addNap.useMutation({
+    onSuccess: () => {
+      toast.success("Nap added!");
+    },
+    onError: (e) => {
+      console.log(e);
+      toast.error("Failed to post! Please try again later.");
+    },
+  });
 
   useEffect(() => {
     const date = new Date();
@@ -34,7 +48,8 @@ export default function NewNap() {
     if (milkRef.current) {
       milkRef.current.value = "0";
     }
-  }, []);
+  }, [isSuccess]);
+
   const addNap = () => {
     if (
       !baby ||
@@ -49,20 +64,47 @@ export default function NewNap() {
     const napStart = new Date(
       `${dateRef.current?.value} ${napStartRef.current?.value}`
     );
+    const utcNapStart = new Date(
+      Date.UTC(
+        napStart.getFullYear(),
+        napStart.getMonth(),
+        napStart.getDate(),
+        napStart.getHours(),
+        napStart.getMinutes(),
+        napStart.getSeconds()
+      )
+    );
+
     const napEnd = new Date(
       `${dateRef.current?.value} ${napEndRef.current?.value}`
     );
 
-    const sleepDurationMinutes =
-      (napEnd.getTime() - napStart.getTime()) / 1000 / 60;
+    const utcNapEnd = new Date(
+      Date.UTC(
+        napEnd.getFullYear(),
+        napEnd.getMonth(),
+        napEnd.getDate(),
+        napEnd.getHours(),
+        napEnd.getMinutes(),
+        napEnd.getSeconds()
+      )
+    );
 
-    newNap.mutate({
-      babyId: baby.id,
-      napStart: napStart,
-      napEnd: napEnd,
-      milk: parseInt(milkRef.current?.value || "0"),
-      durationMinutes: sleepDurationMinutes,
-    });
+    const sleepDurationMinutes =
+      (utcNapEnd.getTime() - utcNapStart.getTime()) / 1000 / 60;
+
+    try {
+      newNap({
+        babyId: baby.id,
+        napStart: utcNapStart,
+        napEnd: utcNapEnd,
+        milk: parseInt(milkRef.current?.value || "0"),
+        durationMinutes: sleepDurationMinutes,
+      });
+    } catch (error) {
+      console.log("error");
+      console.log("error");
+    }
   };
 
   return (

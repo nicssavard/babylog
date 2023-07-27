@@ -9,8 +9,13 @@ AWS.config.update({
 });
 
 export const babyRouter = createTRPCRouter({
-  getBabies: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.baby.findMany();
+  getBabies: publicProcedure.query(async ({ ctx }) => {
+    try {
+      return await ctx.prisma.baby.findMany();
+    } catch (err) {
+      console.log("Error getting babies", err);
+      throw err;
+    }
   }),
   addBaby: publicProcedure
     .input(
@@ -21,33 +26,36 @@ export const babyRouter = createTRPCRouter({
         userId: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.baby.create({
-        data: {
-          name: input.name,
-          birthDate: input.birthDate,
-          image: input.image,
-          userId: input.userId,
-        },
-      });
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.baby.create({
+          data: {
+            name: input.name,
+            birthDate: input.birthDate,
+            image: input.image,
+            userId: input.userId,
+          },
+        });
+      } catch (err) {
+        console.log("Error adding baby", err);
+        throw err;
+      }
     }),
-  getPresignedUrl: publicProcedure
-    .input(
-      z.object({
-        fileName: z.string(),
-      })
-    )
-    .query(({ ctx, input }) => {
-      console.log(input.fileName);
-      console.log("createPresignedUrl");
-      //AWS.config.region = process.env.AWS_REGION;
-      const s3 = new AWS.S3();
-      const presignedURL = s3.getSignedUrl("putObject", {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: input.fileName,
-        Expires: 60 * 5,
-      });
-      console.log(presignedURL);
-      return presignedURL;
-    }),
+  // getPresignedUrl: publicProcedure
+  //   .input(
+  //     z.object({
+  //       fileName: z.string(),
+  //     })
+  //   )
+  //   .query(({ ctx, input }) => {
+  //     //AWS.config.region = process.env.AWS_REGION;
+  //     const s3 = new AWS.S3();
+  //     const presignedURL = s3.getSignedUrl("putObject", {
+  //       Bucket: process.env.AWS_BUCKET_NAME,
+  //       Key: input.fileName,
+  //       Expires: 60 * 5,
+  //     });
+  //     console.log(presignedURL);
+  //     return presignedURL;
+  //   }),
 });

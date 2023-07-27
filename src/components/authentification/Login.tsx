@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { useRouter } from "next/router";
 import { AuthLayout } from "../AuthLayout";
 import { Button } from "../Button";
+import Image from "next/image";
+import BabyLogo from "../../images/babyLogo.png";
 
 interface Props {
   toggleLogin: () => void;
@@ -43,10 +45,8 @@ export default function Login({ toggleLogin }: Props) {
       </Head>
       <AuthLayout>
         <div className="flex flex-col">
-          {/* <Link href="/" aria-label="Home">
-            <Logo className="h-10 w-auto" />
-          </Link> */}
-          <div className="mt-20">
+          <Image src={BabyLogo} width={100} height={100} alt="logo" />
+          <div className="mt-5">
             <h2 className="text-lg font-semibold text-gray-900">
               Log in to your account
             </h2>

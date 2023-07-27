@@ -106,7 +106,7 @@ export function Header() {
   const { data: user } = api.user.getUserByEmail.useQuery({
     email: sessionData?.user?.email ? sessionData.user.email : "placeholder",
   });
-  console.log(user);
+
   const setUser = useStore((state) => state.setUser);
   if (user) {
     setUser(user);
@@ -118,7 +118,7 @@ export function Header() {
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center md:gap-x-12">
             <Link href="/" aria-label="Home">
-              <Logo className="h-10 w-auto" />
+              <Logo textSize="text-2xl" logoSize={40} />
             </Link>
             <div className="hidden md:flex md:gap-x-6">
               <NavLink href="#features">Features</NavLink>

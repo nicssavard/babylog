@@ -2,17 +2,25 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
 
 export const napRouter = createTRPCRouter({
-  getNaps: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.nap.findMany();
+  getNaps: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.nap.findMany();
   }),
   getNapByBaby: publicProcedure
     .input(z.object({ baby_id: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.nap.findMany({
-        where: {
-          babyId: input.baby_id,
-        },
-      });
+    .query(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.nap.findMany({
+          where: {
+            babyId: input.baby_id,
+          },
+        });
+      } catch (error) {
+        console.error(
+          `Error retrieving naps for baby_id: ${input.baby_id}:`,
+          error
+        );
+        return null;
+      }
     }),
   addNap: publicProcedure
     .input(
@@ -24,25 +32,34 @@ export const napRouter = createTRPCRouter({
         durationMinutes: z.number(),
       })
     )
-    .mutation(({ ctx, input }) => {
-      ctx.prisma.baby;
-      return ctx.prisma.nap.create({
-        data: {
-          babyId: input.babyId,
-          milk: input.milk,
-          start: input.napStart,
-          end: input.napEnd,
-          durationMinutes: input.durationMinutes,
-        },
-      });
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.nap.create({
+          data: {
+            babyId: input.babyId,
+            milk: input.milk,
+            start: input.napStart,
+            end: input.napEnd,
+            durationMinutes: input.durationMinutes,
+          },
+        });
+      } catch (error) {
+        console.error("Error creating nap:", error);
+        return null;
+      }
     }),
   deleteNap: publicProcedure
     .input(z.object({ nap_id: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.nap.delete({
-        where: {
-          id: input.nap_id,
-        },
-      });
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.nap.delete({
+          where: {
+            id: input.nap_id,
+          },
+        });
+      } catch (error) {
+        console.error(`Error deleting nap with id: ${input.nap_id}:`, error);
+        return null;
+      }
     }),
 });
