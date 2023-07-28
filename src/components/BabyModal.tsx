@@ -24,9 +24,9 @@ export default function BabyModal({ onClose }: Props) {
   const { data: sessionData } = useSession();
 
   const newBaby = api.baby.addBaby.useMutation();
-  const { data: presignedUrl } = api.baby.getPresignedUrl.useQuery({
-    fileName: fileName || "default",
-  });
+  // const { data: presignedUrl } = api.baby.getPresignedUrl.useQuery({
+  //   fileName: fileName || "default",
+  // });
 
   // const addBaby = () => {
   //   const imageKey = `${user?.id}-${nameRef.current?.value}`;

@@ -3,6 +3,7 @@ import { Button } from "./Button";
 import { api } from "~/utils/api";
 import useStore from "~/store/userStore";
 import { toast } from "react-hot-toast";
+import { LoadingSpinner } from "./loading";
 
 export default function NewNap() {
   const baby = useStore((state) => state.baby);
@@ -10,7 +11,7 @@ export default function NewNap() {
   const napStartRef = useRef<HTMLInputElement>(null);
   const napEndRef = useRef<HTMLInputElement>(null);
   const milkRef = useRef<HTMLInputElement>(null);
-  //const newNap = api.nap.addNap.useMutation();
+
   const {
     mutate: newNap,
     isLoading: isPosting,
@@ -30,17 +31,13 @@ export default function NewNap() {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-
     const today = `${year}-${month}-${day}`;
 
-    const startTime = "13:00";
-    const endTime = "15:00";
-
     if (napStartRef.current) {
-      napStartRef.current.value = startTime;
+      napStartRef.current.value = "13:00";
     }
     if (napEndRef.current) {
-      napEndRef.current.value = endTime;
+      napEndRef.current.value = "15:00";
     }
     if (dateRef.current) {
       dateRef.current.value = today;
@@ -57,7 +54,12 @@ export default function NewNap() {
       !napEndRef.current?.value ||
       !dateRef.current?.value
     ) {
-      console.log("missing data");
+      toast.error("Please fill in all fields!");
+      return;
+    }
+
+    if (napStartRef.current?.value >= napEndRef.current?.value) {
+      toast.error("Nap start must be before nap end!");
       return;
     }
 
@@ -93,27 +95,19 @@ export default function NewNap() {
     const sleepDurationMinutes =
       (utcNapEnd.getTime() - utcNapStart.getTime()) / 1000 / 60;
 
-    try {
-      newNap({
-        babyId: baby.id,
-        napStart: utcNapStart,
-        napEnd: utcNapEnd,
-        milk: parseInt(milkRef.current?.value || "0"),
-        durationMinutes: sleepDurationMinutes,
-      });
-    } catch (error) {
-      console.log("error");
-      console.log("error");
-    }
+    newNap({
+      babyId: baby.id,
+      napStart: utcNapStart,
+      napEnd: utcNapEnd,
+      milk: parseInt(milkRef.current?.value || "0"),
+      durationMinutes: sleepDurationMinutes,
+    });
   };
 
   return (
     <div className="rounded-lg bg-white p-10 text-left">
       <form>
         <div className="flex flex-col">
-          <div>
-            <h2 className="text-xl font-medium text-gray-700">Add Nap</h2>
-          </div>
           <div className="mt-2">
             <label className="block text-sm font-medium text-gray-700">
               Date
@@ -166,10 +160,19 @@ export default function NewNap() {
               />
             </div>
           </div>
-          <div className="mt-2 flex flex-row">
-            <Button color="blue" type="button" onClick={addNap}>
-              <span className="text-white">Add Nap</span>
-            </Button>
+          <div className="mt-6 flex flex-row justify-center">
+            {!isPosting ? (
+              <Button
+                color="blue"
+                type="button"
+                className="text-xl"
+                onClick={addNap}
+              >
+                <span className="text-white">Add Nap</span>
+              </Button>
+            ) : (
+              <LoadingSpinner size={30} />
+            )}
           </div>
         </div>
       </form>

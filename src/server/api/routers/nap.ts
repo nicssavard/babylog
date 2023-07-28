@@ -1,9 +1,14 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 export const napRouter = createTRPCRouter({
   getNaps: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.nap.findMany();
+    const naps = await ctx.prisma.nap.findMany();
+
+    if (!naps) throw new TRPCError({ code: "NOT_FOUND" });
+
+    return naps;
   }),
   getNapByBaby: publicProcedure
     .input(z.object({ baby_id: z.string() }))
