@@ -4,6 +4,7 @@ import useStore from "~/store/userStore";
 import { toast } from "react-hot-toast";
 import { LoadingSpinner } from "./loading";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { toUTC } from "~/utils/dateUtils";
 
 type Inputs = {
   date: string;
@@ -57,27 +58,11 @@ export default function NewNap() {
       return;
     }
     const napStart = new Date(`${data.date} ${data.napStart}`);
-    const utcNapStart = new Date(
-      Date.UTC(
-        napStart.getFullYear(),
-        napStart.getMonth(),
-        napStart.getDate(),
-        napStart.getHours(),
-        napStart.getMinutes(),
-        napStart.getSeconds()
-      )
-    );
+    const utcNapStart = toUTC(napStart);
+
     const napEnd = new Date(`${data.date} ${data.napEnd}`);
-    const utcNapEnd = new Date(
-      Date.UTC(
-        napEnd.getFullYear(),
-        napEnd.getMonth(),
-        napEnd.getDate(),
-        napEnd.getHours(),
-        napEnd.getMinutes(),
-        napEnd.getSeconds()
-      )
-    );
+    const utcNapEnd = toUTC(napEnd);
+
     const sleepDurationMinutes =
       (utcNapEnd.getTime() - utcNapStart.getTime()) / 1000 / 60;
     newNap({
@@ -91,7 +76,9 @@ export default function NewNap() {
 
   return (
     <div className="rounded-lg bg-white p-10 text-left">
+      {/* eslint-disable-next-line */}
       <form onSubmit={handleSubmit(onSubmit)}>
+        {/* above line if not disabled Error: Promise-returning function provided to attribute where a void return was expected.  @typescript-eslint/no-misused-promises */}
         <div className="flex flex-col">
           <div className="mt-2">
             <label className="block text-sm font-medium text-gray-700">
