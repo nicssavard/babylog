@@ -1,153 +1,114 @@
-import { useRef, useEffect } from "react";
 import { Button } from "./Button";
+import FormInput from "./FormInput";
 import { api } from "~/utils/api";
 import useStore from "~/store/userStore";
+import { toast } from "react-hot-toast";
+import { LoadingSpinner } from "./loading";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { toUTC, getCurrentDate } from "~/utils/dateUtils";
+const DEFAULT_SLEEP_START = "20:00";
+const DEFAULT_SLEEP_END = "07:00";
+const DEFAULT_MILK_AMOUNT = "0";
+
+interface Inputs {
+  date: string;
+  sleepStart: string;
+  sleepEnd: string;
+  milk: string;
+}
+
+const defaultValues = {
+  date: getCurrentDate(),
+  sleepStart: DEFAULT_SLEEP_START,
+  sleepEnd: DEFAULT_SLEEP_END,
+  milk: DEFAULT_MILK_AMOUNT,
+};
 
 export default function NewSleep() {
   const baby = useStore((state) => state.baby);
-  const dateRef = useRef<HTMLInputElement>(null);
-  const sleepStartRef = useRef<HTMLInputElement>(null);
-  const sleepEndRef = useRef<HTMLInputElement>(null);
-  const milkRef = useRef<HTMLInputElement>(null);
-  const newSleep = api.sleep.addSleep.useMutation();
+  const { mutate: newSleep, isLoading: isPosting } =
+    api.sleep.addSleep.useMutation({
+      onSuccess: () => {
+        toast.success("Sleep added!");
+        reset(defaultValues);
+      },
+      onError: (e) => {
+        console.log(e);
+        toast.error("Failed to post! Please try again later.");
+      },
+    });
 
-  useEffect(() => {
-    const date = new Date();
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<Inputs>({ defaultValues });
+  const onSubmit: SubmitHandler<Inputs> = (data) => addSleep(data);
 
-    const today = `${year}-${month}-${day}`;
-
-    const startTime = "20:00";
-    const endTime = "07:00";
-
-    if (sleepStartRef.current) {
-      sleepStartRef.current.value = startTime;
-    }
-    if (sleepEndRef.current) {
-      sleepEndRef.current.value = endTime;
-    }
-    if (dateRef.current) {
-      dateRef.current.value = today;
-    }
-    if (milkRef.current) {
-      milkRef.current.value = "0";
-    }
-  }, []);
-  const addSleep = () => {
-    if (
-      !baby ||
-      !sleepStartRef.current?.value ||
-      !sleepEndRef.current?.value ||
-      !dateRef.current?.value
-    ) {
-      console.log("missing data");
+  const addSleep = (data: Inputs) => {
+    if (!baby) {
+      toast.error("Please select a baby first!");
       return;
     }
-    const sleepStart = new Date(
-      `${dateRef.current?.value} ${sleepStartRef.current?.value}`
-    );
-    const utcSleepStart = new Date(
-      Date.UTC(
-        sleepStart.getFullYear(),
-        sleepStart.getMonth(),
-        sleepStart.getDate(),
-        sleepStart.getHours(),
-        sleepStart.getMinutes(),
-        sleepStart.getSeconds()
-      )
-    );
 
-    const sleepEnd = new Date(
-      `${dateRef.current?.value} ${sleepEndRef.current?.value}`
-    );
+    const sleepStart = new Date(`${data.date} ${data.sleepStart}`);
+    const utcSleepStart = toUTC(sleepStart);
+
+    const sleepEnd = new Date(`${data.date} ${data.sleepEnd}`);
     sleepEnd.setDate(sleepEnd.getDate() + 1);
-    const utcSleepEnd = new Date(
-      Date.UTC(
-        sleepEnd.getFullYear(),
-        sleepEnd.getMonth(),
-        sleepEnd.getDate(),
-        sleepEnd.getHours(),
-        sleepEnd.getMinutes(),
-        sleepEnd.getSeconds()
-      )
-    );
+    const utcSleepEnd = toUTC(sleepEnd);
+
     const sleepDurationMinutes =
       (utcSleepEnd.getTime() - utcSleepStart.getTime()) / 1000 / 60;
 
-    newSleep.mutate({
+    newSleep({
       babyId: baby.id,
       sleepStart: utcSleepStart,
       sleepEnd: utcSleepEnd,
-      milk: parseInt(milkRef.current?.value || "0"),
+      milk: parseInt(data.milk),
       durationMinutes: sleepDurationMinutes,
     });
   };
 
   return (
     <div className="rounded-lg bg-white p-10 text-left">
-      <form>
+      {/* eslint-disable-next-line */}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* above line if not disabled Error: Promise-returning function provided to attribute where a void return was expected.  @typescript-eslint/no-misused-promises */}
         <div className="flex flex-col">
-          <div>
-            <h2 className="text-xl font-medium text-gray-700">Add Sleep</h2>
-          </div>
-          <div className="mt-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Date
-            </label>
-            <div className="mt-1">
-              <input
-                ref={dateRef}
-                type="date"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              />
-            </div>
-          </div>
-          <div className="mt-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Bed time
-            </label>
-            <div className="mt-1">
-              <input
-                ref={sleepStartRef}
-                type="time"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                placeholder="Baby's name"
-              />
-            </div>
-          </div>
-          <div className="mt-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Wake up time
-            </label>
-            <div className="mt-1">
-              <input
-                ref={sleepEndRef}
-                type="time"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              />
-            </div>
-          </div>
-          <div className="mt-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Milk (ml)
-            </label>
-            <div className="mt-1">
-              <input
-                ref={milkRef}
-                type="number"
-                min="0"
-                max="500"
-                defaultValue="0"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              />
-            </div>
-          </div>
-          <div className="mt-2 flex flex-row">
-            <Button color="blue" type="button" onClick={addSleep}>
-              <span className="text-white">Add Sleep</span>
-            </Button>
+          <FormInput
+            label="Date"
+            register={register("date", { required: true })}
+            type="date"
+          />
+          <FormInput
+            label="Bed time"
+            register={register("sleepStart")}
+            type="time"
+          />
+          <FormInput
+            label="Wake up time"
+            register={register("sleepEnd")}
+            type="time"
+          />
+          <FormInput
+            label="Milk (ml)"
+            register={register("milk", { required: true })}
+            type="number"
+            min="0"
+            max="500"
+            step="5"
+          />
+
+          <div className="mt-6 flex flex-row justify-center">
+            {!isPosting ? (
+              <Button color="blue" type="submit" className="text-xl">
+                Add Sleep
+              </Button>
+            ) : (
+              <LoadingSpinner size={30} />
+            )}
           </div>
         </div>
       </form>
