@@ -10,13 +10,14 @@ const DEFAULT_NAP_START = "13:00";
 const DEFAULT_NAP_END = "15:00";
 const DEFAULT_MILK_AMOUNT = "0";
 
-type Inputs = {
+type FormInputs = {
   date: string;
   napStart: string;
   napEnd: string;
   milk: string;
 };
 
+// Set default values for the form inputs
 const defaultValues = {
   date: getCurrentDate(),
   napStart: DEFAULT_NAP_START,
@@ -37,15 +38,16 @@ export default function NewNap() {
     },
   });
 
+  // Initialize form with react-hook-form
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<Inputs>({ defaultValues });
-  const onSubmit: SubmitHandler<Inputs> = (data) => addNap(data);
+  } = useForm<FormInputs>({ defaultValues });
+  const onSubmit: SubmitHandler<FormInputs> = (data) => addNap(data);
 
-  const addNap = (data: Inputs) => {
+  const addNap = (data: FormInputs) => {
     if (!baby) {
       toast.error("Please select a baby first!");
       return;
@@ -54,6 +56,8 @@ export default function NewNap() {
       toast.error("Nap start must be before nap end!");
       return;
     }
+
+    // Convert sleep start and end times to UTC to prevent timezone issues
     const napStart = new Date(`${data.date} ${data.napStart}`);
     const utcNapStart = toUTC(napStart);
 

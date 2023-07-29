@@ -10,13 +10,14 @@ const DEFAULT_SLEEP_START = "20:00";
 const DEFAULT_SLEEP_END = "07:00";
 const DEFAULT_MILK_AMOUNT = "0";
 
-interface Inputs {
+interface FormInputs {
   date: string;
   sleepStart: string;
   sleepEnd: string;
   milk: string;
 }
 
+// Set default values for the form inputs
 const defaultValues = {
   date: getCurrentDate(),
   sleepStart: DEFAULT_SLEEP_START,
@@ -26,6 +27,7 @@ const defaultValues = {
 
 export default function NewSleep() {
   const baby = useStore((state) => state.baby);
+
   const { mutate: newSleep, isLoading: isPosting } =
     api.sleep.addSleep.useMutation({
       onSuccess: () => {
@@ -38,20 +40,22 @@ export default function NewSleep() {
       },
     });
 
+  // Initialize form with react-hook-form
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<Inputs>({ defaultValues });
-  const onSubmit: SubmitHandler<Inputs> = (data) => addSleep(data);
+  } = useForm<FormInputs>({ defaultValues });
+  const onSubmit: SubmitHandler<FormInputs> = (data) => addSleep(data);
 
-  const addSleep = (data: Inputs) => {
+  const addSleep = (data: FormInputs) => {
     if (!baby) {
       toast.error("Please select a baby first!");
       return;
     }
 
+    // Convert sleep start and end times to UTC to prevent timezone issues
     const sleepStart = new Date(`${data.date} ${data.sleepStart}`);
     const utcSleepStart = toUTC(sleepStart);
 
