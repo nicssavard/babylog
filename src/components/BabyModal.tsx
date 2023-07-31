@@ -1,13 +1,20 @@
-import { Fragment, SetStateAction, useState } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/24/outline";
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "./Button";
 import { useRef } from "react";
 import { api } from "~/utils/api";
-import { useSession } from "next-auth/react";
 import AWS from "aws-sdk";
 import useStore from "~/store/userStore";
+import FormInput from "./FormInput";
+import { toast } from "react-hot-toast";
+import { LoadingSpinner } from "./loading";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface FormInputs {
+  name: string;
+  birthDate: string;
+  image: FileList;
+}
 
 interface Props {
   onClose: () => void;
@@ -15,86 +22,51 @@ interface Props {
 
 export default function BabyModal({ onClose }: Props) {
   const [open, setOpen] = useState(true);
-  const [file, setFile] = useState<File | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null); // Add this line
-  const nameRef = useRef<HTMLInputElement>(null);
-  const birthDateRef = useRef<HTMLInputElement>(null);
-  const imageRef = useRef<HTMLInputElement>(null);
   const user = useStore((state) => state.user);
-  const { data: sessionData } = useSession();
 
-  const newBaby = api.baby.addBaby.useMutation();
-  // const { data: presignedUrl } = api.baby.getPresignedUrl.useQuery({
-  //   fileName: fileName || "default",
-  // });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormInputs>();
+  const onSubmit: SubmitHandler<FormInputs> = (data) => addBaby(data);
 
-  // const addBaby = () => {
-  //   const imageKey = `${user?.id}-${nameRef.current?.value}`;
-  //   if (imageKey) {
-  //     setFileName(imageKey); // This will trigger the useQuery hook to run
-  //   }
-  //   console.log(presignedUrl);
-  //   if (presignedUrl) {
-  //     uploadFile(presignedUrl, file!);
-  //   }
-  // };
+  const { mutate: newBaby, isLoading: isPosting } =
+    api.baby.addBaby.useMutation({
+      onSuccess: () => {
+        toast.success("Baby added!");
+        onClose();
+      },
+      onError: (e) => {
+        console.log(e);
+        toast.error("Failed to post! Please try again later.");
+      },
+    });
 
-  // const uploadFile = async (url: string, file: File): Promise<void> => {
-  //   console.log(url, file);
-  //   try {
-  //     const response = await fetch(url, {
-  //       method: "PUT",
-  //       body: file,
-  //       headers: {
-  //         "Content-Type": file.type,
-  //       },
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorBody = await response.text(); // Get response body as text
-  //       console.error("Error uploading file:", errorBody); // Log the error body
-  //       return;
-  //     }
-
-  //     console.log("File uploaded successfully");
-  //   } catch (err) {
-  //     console.error("Error during the request:", err);
-  //   }
-  // };
-
-  const addBaby = () => {
-    if (
-      !nameRef.current?.value ||
-      !birthDateRef.current?.value ||
-      !imageRef.current?.value ||
-      !user?.id
-    ) {
-      console.log("missing data");
+  const addBaby = (data: FormInputs) => {
+    if (!user) {
+      toast.error("Please log in first!");
       return;
     }
-    const imageKey = `${user?.id}-${nameRef.current?.value}`;
-    newBaby.mutate({
+    const imageKey = `${user?.id}-${data.name}`;
+    newBaby({
       userId: user?.id,
-      name: nameRef.current?.value,
+      name: data.name,
       image: imageKey,
-      birthDate: new Date(birthDateRef.current?.value),
+      birthDate: new Date(data.birthDate),
     });
-    uploadToS3(file!, imageKey);
-
-    onClose();
+    uploadToS3(data.image[0]!, imageKey);
   };
 
   const uploadToS3 = (file: File, imageKey: string) => {
-    console.log("s3");
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = async () => {
       const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME;
       if (!bucketName) {
-        console.error("AWS bucket name is not defined");
         return;
       }
-      console.log(imageKey);
       const params: AWS.S3.PutObjectRequest = {
         Bucket: bucketName,
         Key: imageKey,
@@ -109,7 +81,6 @@ export default function BabyModal({ onClose }: Props) {
         });
 
         const stored = await s3.upload(params).promise();
-        console.log(stored);
       } catch (error) {
         console.error(error);
       }
@@ -142,7 +113,10 @@ export default function BabyModal({ onClose }: Props) {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <div className="rounded-lg bg-white p-20 text-left">
-                <form>
+                <form
+                  /* eslint-disable */ /* Error: Promise-returning function provided to attribute where a void return was expected.  @typescript-eslint/no-misused-promises */
+                  onSubmit={handleSubmit(onSubmit)}
+                >
                   <div className="flex flex-col">
                     <div>
                       <h2>
@@ -151,56 +125,23 @@ export default function BabyModal({ onClose }: Props) {
                         </Dialog.Title>
                       </h2>
                     </div>
-                    <div className="mt-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Name
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          ref={nameRef}
-                          type="text"
-                          name="name"
-                          id="name"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                          placeholder="Baby's name"
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Date of Birth
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          ref={birthDateRef}
-                          type="date"
-                          name="dateOfBirth"
-                          id="dateOfBirth"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                          placeholder="Baby's name"
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Image
-                      </label>
-                      <div className="mt-1">
-                        <input
-                          ref={imageRef}
-                          type="file"
-                          name="image"
-                          id="image"
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                          placeholder="Baby's name"
-                          onChange={(e) => {
-                            if (e.target.files)
-                              setFile(e.target.files[0] || null);
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-2 flex flex-row">
+                    <FormInput
+                      label="Name"
+                      register={register("name", { required: true })}
+                      type="text"
+                      placeholder="Baby's name"
+                    />
+                    <FormInput
+                      label="Date of Birth"
+                      register={register("birthDate", { required: true })}
+                      type="date"
+                    />
+                    <FormInput
+                      label="Image"
+                      register={register("image", { required: true })}
+                      type="file"
+                    />
+                    <div className="mt-5 flex flex-row">
                       <Button
                         className="mr-4"
                         color="slate"
@@ -209,9 +150,13 @@ export default function BabyModal({ onClose }: Props) {
                       >
                         <span className="text-white">Cancel</span>
                       </Button>
-                      <Button color="blue" type="button" onClick={addBaby}>
-                        <span className="text-white">Add</span>
-                      </Button>
+                      {!isPosting ? (
+                        <Button color="blue" type="submit">
+                          <span className="text-white">Add</span>
+                        </Button>
+                      ) : (
+                        <LoadingSpinner size={30} />
+                      )}
                     </div>
                   </div>
                 </form>

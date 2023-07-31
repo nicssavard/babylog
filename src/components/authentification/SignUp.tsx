@@ -23,8 +23,8 @@ interface Props {
 export default function SignUp({ toLogin }: Props) {
   const { mutate: newUser, isLoading } = api.user.addUser.useMutation({
     onSuccess: () => {
-      toLogin();
       toast.success("Account created successfully!");
+      toLogin();
     },
     onError: (error) => {
       toast.error("An error occurred during sign up: " + error.message);
@@ -58,7 +58,7 @@ export default function SignUp({ toLogin }: Props) {
             <Logo textSize="text-6xl" logoSize={85} />
           </Link>
 
-          <div className="mt-20">
+          <div className="mt-2 1080:mt-20">
             <h2 className="text-lg font-semibold text-gray-900">
               Get started for free
             </h2>
@@ -77,7 +77,7 @@ export default function SignUp({ toLogin }: Props) {
         <form
           /* eslint-disable */ /* Error: Promise-returning function provided to attribute where a void return was expected.  @typescript-eslint/no-misused-promises */
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
+          className="mt-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
         >
           <div>
             <FormInput
