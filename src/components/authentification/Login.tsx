@@ -4,13 +4,17 @@ import { Logo } from "../Logo";
 import { useRouter } from "next/router";
 import { AuthLayout } from "../AuthLayout";
 import { Button } from "../Button";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, set } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import FormInput from "../FormInput";
+import { useState } from "react";
+import { LoadingSpinner } from "../loading";
+import Link from "next/link";
 
 //Guest login credentials
 const GUEST_EMAIL = "nic@nic.com";
 const GUEST_PASSWORD = "nic";
+
 interface FormInputs {
   email: string;
   password: string;
@@ -21,6 +25,7 @@ interface Props {
   toSignin: () => void;
 }
 export default function Login({ toSignin }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const {
@@ -32,6 +37,7 @@ export default function Login({ toSignin }: Props) {
   const onSubmit: SubmitHandler<FormInputs> = (data) => loginHandler(data);
 
   const loginHandler = async (data: FormInputs) => {
+    setIsLoading(true);
     try {
       const user = await signIn("credentials", {
         email: data.email,
@@ -48,6 +54,8 @@ export default function Login({ toSignin }: Props) {
       }
     } catch (error) {
       console.error("An error occurred during sign in:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,9 +66,11 @@ export default function Login({ toSignin }: Props) {
       </Head>
       <AuthLayout>
         <div className="flex flex-col">
-          <Logo textSize="text-6xl" logoSize={85} />
+          <Link href="/" aria-label="Home">
+            <Logo textSize="text-6xl" logoSize={85} />
+          </Link>
           <div className="mt-5">
-            <p className="mt-2 text-sm text-gray-700">
+            <p className="mt-20 text-sm text-gray-700">
               Don’t have an account?{" "}
               <span
                 className="cursor-pointer font-medium text-blue-600 hover:underline"
@@ -106,17 +116,21 @@ export default function Login({ toSignin }: Props) {
               register={register("password", { required: true })}
             />
           </div>
-          <div>
-            <Button
-              type="submit"
-              variant="solid"
-              color="blue"
-              className="w-full text-3xl"
-            >
-              <span>
-                Log in <span aria-hidden="true">&rarr;</span>
-              </span>
-            </Button>
+          <div className="flex flex-row justify-center">
+            {!isLoading ? (
+              <Button
+                type="submit"
+                variant="solid"
+                color="blue"
+                className="w-full text-3xl"
+              >
+                <span>
+                  Log in <span aria-hidden="true">&rarr;</span>
+                </span>
+              </Button>
+            ) : (
+              <LoadingSpinner size={30} />
+            )}
           </div>
         </form>
       </AuthLayout>

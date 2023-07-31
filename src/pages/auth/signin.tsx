@@ -12,7 +12,7 @@ export default function SignIn() {
       {isLogin ? (
         <Login toSignin={toggleLogin} />
       ) : (
-        <SignUp toggleLogin={toggleLogin} />
+        <SignUp toLogin={toggleLogin} />
       )}
     </div>
   );
