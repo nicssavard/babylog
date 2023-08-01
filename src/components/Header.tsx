@@ -56,6 +56,7 @@ function MobileNavIcon({ open }: MobileNavIconProps) {
 }
 
 function MobileNavigation() {
+  const { data: sessionData } = useSession();
   return (
     <Popover>
       <Popover.Button
@@ -92,8 +93,20 @@ function MobileNavigation() {
             <MobileNavLink href="#features">Features</MobileNavLink>
             <MobileNavLink href="#testimonials">Testimonials</MobileNavLink>
             <MobileNavLink href="#pricing">Pricing</MobileNavLink>
-            <hr className="m-2 border-slate-300/40" />
-            <MobileNavLink href="/login">Sign in</MobileNavLink>
+            {sessionData && (
+              <>
+                <hr className="m-2 border-slate-300/40" />
+                <MobileNavLink href="">
+                  <div
+                    onClick={
+                      sessionData ? () => void signOut() : () => void signIn()
+                    }
+                  >
+                    {sessionData ? "Sign out" : "Sign in"}
+                  </div>
+                </MobileNavLink>
+              </>
+            )}
           </Popover.Panel>
         </Transition.Child>
       </Transition.Root>
@@ -129,24 +142,25 @@ export function Header() {
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block">
               {/* <NavLink href="/login">Sign in</NavLink> */}
-              <button
-                className="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-                onClick={
-                  sessionData ? () => void signOut() : () => void signIn()
-                }
-              >
-                {sessionData ? "Sign out" : "Sign in"}
-              </button>
-            </div>
-            <Button href={sessionData ? "/family" : "/register"} color="blue">
-              {sessionData ? (
-                <span>My Family</span>
-              ) : (
-                <span>
-                  Get started <span className="hidden lg:inline">today</span>
-                </span>
+              {sessionData && (
+                <button
+                  className="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                  onClick={() => void signOut()}
+                >
+                  Sign out
+                </button>
               )}
-            </Button>
+            </div>
+            {sessionData ? (
+              <Button color="blue" href="/family">
+                My Family
+              </Button>
+            ) : (
+              <Button color="blue" onClick={() => void signIn()}>
+                Sign in
+              </Button>
+            )}
+
             <div className="-mr-1 md:hidden">
               <MobileNavigation />
             </div>

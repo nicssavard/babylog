@@ -1,19 +1,33 @@
 import moment from "moment";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { api } from "~/utils/api";
+import { toast } from "react-hot-toast";
+import { LoadingSpinner } from "./loading";
 
 interface Props {
   nap: Nap;
 }
 
 export default function Nap({ nap }: Props) {
-  const deleteNap = api.nap.deleteNap.useMutation();
+  const ctx = api.useContext();
+
+  const { mutate: deleteNap, isLoading: isDeleting } =
+    api.nap.deleteNap.useMutation({
+      onSuccess: () => {
+        toast.success("Nap deleted!");
+        void ctx.nap.getNapByBaby.invalidate();
+      },
+      onError: (e) => {
+        console.log(e);
+        toast.error("Failed to delete nap! Please try again later.");
+      },
+    });
 
   const napStart = moment(nap.start).utc().format("h:mm a");
   const napEnd = moment(nap.end).utc().format("h:mm a");
 
   const deleteNapHandler = () => {
-    deleteNap.mutate({ nap_id: nap.id });
+    deleteNap({ nap_id: nap.id });
   };
   return (
     <tr key={nap.id}>
@@ -30,14 +44,17 @@ export default function Nap({ nap }: Props) {
         {nap.milk}
       </td>
       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-        <a
-          href="#"
-          className="text-red-600 hover:text-red-500"
-          onClick={deleteNapHandler}
-        >
-          <TrashIcon className="h-5 w-5" aria-hidden="true" />
-          <span className="sr-only"></span>
-        </a>
+        {!isDeleting ? (
+          <a
+            href="#"
+            className="text-red-600 hover:text-red-500"
+            onClick={deleteNapHandler}
+          >
+            <TrashIcon className="h-5 w-5" aria-hidden="true" />
+          </a>
+        ) : (
+          <LoadingSpinner color="fill-red-600 text-red-300" />
+        )}
       </td>
     </tr>
   );

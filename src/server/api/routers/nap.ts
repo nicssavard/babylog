@@ -4,7 +4,10 @@ import { TRPCError } from "@trpc/server";
 
 export const napRouter = createTRPCRouter({
   getNaps: publicProcedure.query(async ({ ctx }) => {
-    const naps = await ctx.prisma.nap.findMany();
+    const naps = await ctx.prisma.nap.findMany({
+      take: 100,
+      orderBy: [{ start: "desc" }],
+    });
 
     if (!naps) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -18,6 +21,7 @@ export const napRouter = createTRPCRouter({
           where: {
             babyId: input.baby_id,
           },
+          orderBy: [{ start: "desc" }],
         });
       } catch (error) {
         console.error(

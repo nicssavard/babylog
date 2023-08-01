@@ -12,6 +12,7 @@ export const sleepRouter = createTRPCRouter({
         where: {
           babyId: input.baby_id,
         },
+        orderBy: [{ start: "desc" }],
       });
     }),
   addSleep: publicProcedure
