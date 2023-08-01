@@ -8,17 +8,11 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
-//import AdminSubject from "../components/admin/AdminSubjects";
-
 const navigation = [
-  { name: "Night", href: "#", icon: HomeIcon, current: true },
-  { name: "Nap", href: "#", icon: HomeIcon, current: true },
-  { name: "Data", href: "#", icon: HomeIcon, current: true },
+  { name: "Night", href: "#", icon: HomeIcon, current: false },
+  { name: "Nap", href: "#", icon: HomeIcon, current: false },
+  { name: "Data", href: "#", icon: HomeIcon, current: false },
   { name: "Graph", href: "#", icon: UsersIcon, current: false },
-  // { name: "Projects", href: "#", icon: FolderIcon, current: false },
-  // { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-  // { name: "Documents", href: "#", icon: InboxIcon, current: false },
-  // { name: "Reports", href: "#", icon: ChartBarIcon, current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -29,6 +23,18 @@ export default function Sidebar(): JSX.Element {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const content = useStore((state) => state.content);
   const setContent = useStore((state) => state.setContent);
+
+  const selectOption = (option: string) => {
+    setContent(option);
+    setSidebarOpen(false);
+    for (let i = 0; i < navigation.length; i++) {
+      if (navigation[i]?.name === option) {
+        navigation[i]!.current = true;
+      } else {
+        navigation[i]!.current = false;
+      }
+    }
+  };
   return (
     <>
       {/*
@@ -78,10 +84,10 @@ export default function Sidebar(): JSX.Element {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <div className="absolute right-0 top-0 -mr-12 pt-2">
+                    <div className="absolute right-0 top-0 z-40 -mr-12 pt-2">
                       <button
                         type="button"
-                        className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                        className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 "
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
@@ -99,15 +105,15 @@ export default function Sidebar(): JSX.Element {
                         <a
                           key={item.name}
                           href={item.href}
-                          onClick={() => setContent(item.name)}
+                          onClick={() => selectOption(item.name)}
                           className={classNames(
                             item.current
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-                            "group flex items-center rounded-md px-2 py-2 text-base font-medium"
+                              ? "bg-blue-100 text-blue-600"
+                              : " text-blue-600  ",
+                            "group flex items-center rounded-md px-2 py-2 text-2xl font-medium"
                           )}
                         >
-                          <item.icon
+                          {/* <item.icon
                             className={classNames(
                               item.current
                                 ? "text-gray-500"
@@ -115,7 +121,7 @@ export default function Sidebar(): JSX.Element {
                               "mr-4 h-6 w-6 flex-shrink-0"
                             )}
                             aria-hidden="true"
-                          />
+                          /> */}
                           {item.name}
                         </a>
                       ))}
@@ -164,21 +170,16 @@ export default function Sidebar(): JSX.Element {
           </div>
         </div>
         <div className="flex flex-1 flex-col md:pl-48">
-          <div className="fixed top-14 z-0 flex h-16 flex-shrink-0 bg-transparent ">
+          <div className=" top-14  flex h-16 flex-shrink-0 bg-transparent ">
             <button
               type="button"
-              className=" px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+              className=" px-4 text-gray-500 focus:outline-none  md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
               <Bars3BottomLeftIcon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-
-          <main className="flex-1">
-            {/* {content === "Subject" && <AdminSubject />} */}
-            {content === "Users ranking" && <div />}
-          </main>
         </div>
       </div>
     </>

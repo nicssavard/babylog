@@ -17,7 +17,7 @@ export default function Family() {
       <>
         <Header />
         <Container>
-          <div className="mt-8 flex flex-row">
+          <div className="flex flex-col md:flex-row">
             <Sidebar />
             <div className="flex w-full flex-col items-center">
               <Babies />
@@ -31,7 +31,7 @@ export default function Family() {
     <>
       <Header />
       <Container>
-        <div className="mt-8 flex flex-row">
+        <div className=" flex flex-col md:flex-row ">
           <Sidebar />
           <div className="flex w-full flex-col items-center">
             <Babies />
