@@ -7,7 +7,6 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import type { GetServerSideProps } from "next";
 
 //import AdminSubject from "../components/admin/AdminSubjects";
 

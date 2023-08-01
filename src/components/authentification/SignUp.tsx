@@ -31,12 +31,7 @@ export default function SignUp({ toLogin }: Props) {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<FormInputs>();
+  const { register, handleSubmit } = useForm<FormInputs>();
   const onSubmit: SubmitHandler<FormInputs> = (data) => addUser(data);
 
   const addUser = (data: FormInputs) => {

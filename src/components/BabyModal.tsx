@@ -1,7 +1,6 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Button } from "./Button";
-import { useRef } from "react";
 import { api } from "~/utils/api";
 import AWS from "aws-sdk";
 import useStore from "~/store/userStore";
@@ -24,12 +23,7 @@ export default function BabyModal({ onClose }: Props) {
   const [open, setOpen] = useState(true);
   const user = useStore((state) => state.user);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<FormInputs>();
+  const { register, handleSubmit } = useForm<FormInputs>();
   const onSubmit: SubmitHandler<FormInputs> = (data) => addBaby(data);
 
   const { mutate: newBaby, isLoading: isPosting } =

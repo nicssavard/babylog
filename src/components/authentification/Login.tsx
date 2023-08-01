@@ -4,7 +4,7 @@ import { Logo } from "../Logo";
 import { useRouter } from "next/router";
 import { AuthLayout } from "../AuthLayout";
 import { Button } from "../Button";
-import { useForm, SubmitHandler, set } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import FormInput from "../FormInput";
 import { useState } from "react";
@@ -28,12 +28,7 @@ export default function Login({ toSignin }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<FormInputs>();
+  const { register, handleSubmit } = useForm<FormInputs>();
   const onSubmit: SubmitHandler<FormInputs> = (data) => loginHandler(data);
 
   const loginHandler = async (data: FormInputs) => {

@@ -41,12 +41,9 @@ export default function NewSleep() {
     });
 
   // Initialize form with react-hook-form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<FormInputs>({ defaultValues });
+  const { register, handleSubmit, reset } = useForm<FormInputs>({
+    defaultValues,
+  });
   const onSubmit: SubmitHandler<FormInputs> = (data) => addSleep(data);
 
   const addSleep = (data: FormInputs) => {

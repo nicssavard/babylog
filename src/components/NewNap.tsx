@@ -39,12 +39,9 @@ export default function NewNap() {
   });
 
   // Initialize form with react-hook-form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<FormInputs>({ defaultValues });
+  const { register, handleSubmit, reset } = useForm<FormInputs>({
+    defaultValues,
+  });
   const onSubmit: SubmitHandler<FormInputs> = (data) => addNap(data);
 
   const addNap = (data: FormInputs) => {
