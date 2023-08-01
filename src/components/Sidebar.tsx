@@ -14,7 +14,7 @@ const navigation = [
   { name: "Night", href: "#", icon: HomeIcon, current: true },
   { name: "Nap", href: "#", icon: HomeIcon, current: true },
   { name: "Data", href: "#", icon: HomeIcon, current: true },
-  { name: "Display Data", href: "#", icon: UsersIcon, current: false },
+  { name: "Graph", href: "#", icon: UsersIcon, current: false },
   // { name: "Projects", href: "#", icon: FolderIcon, current: false },
   // { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
   // { name: "Documents", href: "#", icon: InboxIcon, current: false },
@@ -43,7 +43,7 @@ export default function Sidebar(): JSX.Element {
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
-            className="relative z-40 md:hidden"
+            className="relative  md:hidden"
             onClose={setSidebarOpen}
           >
             <Transition.Child
@@ -58,7 +58,7 @@ export default function Sidebar(): JSX.Element {
               <div className="fixed inset-0 bg-gray-600 bg-opacity-75" />
             </Transition.Child>
 
-            <div className="fixed inset-0 z-40 flex">
+            <div className="fixed inset-0  flex">
               <Transition.Child
                 as={Fragment}
                 enter="transition ease-in-out duration-300 transform"

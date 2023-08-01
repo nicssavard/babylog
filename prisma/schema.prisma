@@ -56,17 +56,6 @@ model User {
     sessions           Session[]
     babies             Baby[]            // added relation field
 }
-//Before adding credentials login
-// model User {
-//     id                 String            @id @default(cuid())
-//     name               String?
-//     email              String?           @unique
-//     emailVerified      DateTime?
-//     image              String?
-//     accounts           Account[]
-//     sessions           Session[]
-//     babies             Baby[]            // added relation field
-// }
 
 model VerificationToken {
     identifier String
