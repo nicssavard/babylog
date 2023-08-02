@@ -56,6 +56,7 @@ export const chartRouter = createTRPCRouter({
         where: {
           babyId: input.baby_id,
         },
+        orderBy: [{ start: "asc" }],
       });
       const month = input.month;
       const year = input.year;
@@ -98,7 +99,7 @@ export const chartRouter = createTRPCRouter({
       sleeps.forEach((sleep) => {
         monthList.add(sleep.start.getMonth() + 1);
       });
-      return Array.from(monthList);
+      return Array.from(monthList).sort();
     }),
   getSleepYearList: publicProcedure
     .input(z.object({ baby_id: z.string() }))
@@ -112,6 +113,6 @@ export const chartRouter = createTRPCRouter({
       sleeps.forEach((sleep) => {
         yearList.add(sleep.start.getFullYear());
       });
-      return Array.from(yearList);
+      return Array.from(yearList).sort();
     }),
 });

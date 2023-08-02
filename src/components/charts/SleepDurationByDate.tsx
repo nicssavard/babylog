@@ -87,15 +87,21 @@ export default function SleepDurationByDate() {
           <div className="">
             <select
               onChange={(e) => monthHandler(e.target.value)}
-              className="w-12 rounded-l-full border-l border-gray-500 p-1 text-xs md:w-16" //add a border on the left
+              className="w-12 rounded-l-full border-l border-gray-500 p-1 pl-2 text-xs " //add a border on the left
               placeholder="MM"
             >
+              <option value="none" selected disabled hidden>
+                {month}
+              </option>
               {monthList}
             </select>
             <select
               onChange={(e) => yearHandler(e.target.value)}
-              className="w-16 rounded-r-full border-r border-gray-500 p-1 text-xs md:w-20"
+              className="w-16 rounded-r-full border-r border-gray-500 p-1 text-xs "
             >
+              <option value="none" selected disabled hidden>
+                {year}
+              </option>
               {yearList}
             </select>
           </div>
