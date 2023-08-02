@@ -41,6 +41,49 @@ export const chartRouter = createTRPCRouter({
             label: "sleep duration by bed time",
             data: sleepAverage.slice(18), // slice to only show hours from 18 to 23
             borderWidth: 1,
+            backgroundColor: "rgb(37 99 235)",
+            borderColor: "rgb(37 99 235)",
+          },
+        ],
+      };
+    }),
+  getSleepDurationByDateChart: publicProcedure
+    .input(
+      z.object({ baby_id: z.string(), month: z.number(), year: z.number() })
+    )
+    .query(async ({ ctx, input }) => {
+      const sleeps = await ctx.prisma.sleep.findMany({
+        where: {
+          babyId: input.baby_id,
+        },
+      });
+      const month = input.month;
+      const year = input.year;
+
+      const filteredSleeps = sleeps.filter((sleep) => {
+        return (
+          sleep.start.getFullYear() === year &&
+          sleep.start.getMonth() + 1 === month // getMonth() returns 0 to 11
+        );
+      });
+      const sleepDuration = filteredSleeps.map((sleep) => {
+        return sleep.durationMinutes;
+      });
+      const dates = filteredSleeps.map((sleep) => {
+        return sleep.start.getDate();
+      });
+      console.log(sleepDuration);
+      console.log(dates);
+
+      return {
+        labels: dates,
+        datasets: [
+          {
+            label: "sleep duration by date",
+            data: sleepDuration,
+            borderWidth: 1,
+            backgroundColor: "rgb(37 99 235)",
+            borderColor: "rgb(37 99 235)",
           },
         ],
       };

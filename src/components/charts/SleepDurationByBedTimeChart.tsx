@@ -24,6 +24,11 @@ export default function SleepDurationByBedTimeChart() {
         type: "line",
         data: data || { labels: [], datasets: [] }, // Ensure that data is always defined, otherwise Chart.js throws an error
         options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
           scales: {
             y: {
               beginAtZero: true,
@@ -34,5 +39,14 @@ export default function SleepDurationByBedTimeChart() {
     }
   }, [data]);
 
-  return <canvas ref={chartRef} />;
+  return (
+    <>
+      <div className="flex flex-col">
+        <h1 className="mx-auto mb-4 justify-center text-2xl">
+          Sleep duration by bed time
+        </h1>
+        <canvas ref={chartRef} />
+      </div>
+    </>
+  );
 }
