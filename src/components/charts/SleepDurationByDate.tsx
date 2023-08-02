@@ -10,17 +10,21 @@ const currentYear = new Date().getFullYear();
 export default function SleepDurationByDate() {
   const [month, setMonth] = useState<number>(currentMonth);
   const [year, setYear] = useState<number>(currentYear);
-  const [monthValue, setMonthValue] = useState<number>(currentMonth);
-  const [yearValue, setYearValue] = useState<number>(currentYear);
 
   const baby = useStore((state) => state.baby);
+  const { data: monthsList } = api.chart.getSleepMonthList.useQuery({
+    baby_id: baby?.id || "",
+  });
+  const { data: yearsList } = api.chart.getSleepYearList.useQuery({
+    baby_id: baby?.id || "",
+  });
 
   const { data: data } = api.chart.getSleepDurationByDateChart.useQuery({
     baby_id: baby?.id || "",
     month: month,
     year: year,
   });
-  console.log(data);
+
   const chartRef = useRef(null);
   const chartInstanceRef = useRef<Chart<"bar", number[], number> | undefined>(
     undefined
@@ -52,34 +56,24 @@ export default function SleepDurationByDate() {
   }, [data]);
 
   const monthHandler = (input: string) => {
-    setMonthValue(parseInt(input));
-  };
-  const monthVerify = (input: string) => {
-    if (!input) {
-      return;
-    }
-    if (parseInt(input) < 1 || parseInt(input) > 12) {
-      setMonth(currentMonth);
-      setMonthValue(currentMonth);
-    } else {
-      setMonth(parseInt(input));
-    }
+    setMonth(parseInt(input));
   };
 
   const yearHandler = (input: string) => {
-    setYearValue(parseInt(input));
+    setYear(parseInt(input));
   };
-  const yearVerify = (input: string) => {
-    if (!input) {
-      return;
-    }
-    if (parseInt(input) < 2000 || parseInt(input) > 2025) {
-      setYear(currentYear);
-      setYearValue(currentYear);
-    } else {
-      setYear(parseInt(input));
-    }
-  };
+
+  const monthList = monthsList?.map((month) => (
+    <option key={month} value={month}>
+      {month}
+    </option>
+  ));
+
+  const yearList = yearsList?.map((year) => (
+    <option key={year} value={year}>
+      {year}
+    </option>
+  ));
 
   return (
     <>
@@ -91,24 +85,19 @@ export default function SleepDurationByDate() {
         <canvas ref={chartRef} />
         <div className="mt-2 flex w-full flex-row justify-end">
           <div className="">
-            <input
-              onBlur={(e) => monthVerify(e.target.value)}
+            <select
               onChange={(e) => monthHandler(e.target.value)}
-              value={monthValue}
-              type="number"
-              className="w-12 rounded-l-full border-l border-gray-500 text-xs" //add a border on the left
+              className="w-12 rounded-l-full border-l border-gray-500 p-1 text-xs md:w-16" //add a border on the left
               placeholder="MM"
-              maxLength={2}
-            ></input>
-            <input
-              onBlur={(e) => yearVerify(e.target.value)}
+            >
+              {monthList}
+            </select>
+            <select
               onChange={(e) => yearHandler(e.target.value)}
-              value={yearValue}
-              type="number"
-              className="w-16 rounded-r-full border-r border-gray-500 text-xs"
-              placeholder="YYYY"
-              maxLength={4}
-            ></input>
+              className="w-16 rounded-r-full border-r border-gray-500 p-1 text-xs md:w-20"
+            >
+              {yearList}
+            </select>
           </div>
         </div>
       </div>

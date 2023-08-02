@@ -41,8 +41,8 @@ export const chartRouter = createTRPCRouter({
             label: "sleep duration by bed time",
             data: sleepAverage.slice(18), // slice to only show hours from 18 to 23
             borderWidth: 1,
-            backgroundColor: "rgb(37 99 235)",
-            borderColor: "rgb(37 99 235)",
+            backgroundColor: "rgb(96 165 250)",
+            borderColor: "rgb(96 165 250)",
           },
         ],
       };
@@ -72,8 +72,6 @@ export const chartRouter = createTRPCRouter({
       const dates = filteredSleeps.map((sleep) => {
         return sleep.start.getDate();
       });
-      console.log(sleepDuration);
-      console.log(dates);
 
       return {
         labels: dates,
@@ -82,10 +80,38 @@ export const chartRouter = createTRPCRouter({
             label: "sleep duration by date",
             data: sleepDuration,
             borderWidth: 1,
-            backgroundColor: "rgb(37 99 235)",
-            borderColor: "rgb(37 99 235)",
+            backgroundColor: "rgb(96 165 250)",
+            borderColor: "rgb(96 165 250)",
           },
         ],
       };
+    }),
+  getSleepMonthList: publicProcedure
+    .input(z.object({ baby_id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const sleeps = await ctx.prisma.sleep.findMany({
+        where: {
+          babyId: input.baby_id,
+        },
+      });
+      const monthList = new Set<number>();
+      sleeps.forEach((sleep) => {
+        monthList.add(sleep.start.getMonth() + 1);
+      });
+      return Array.from(monthList);
+    }),
+  getSleepYearList: publicProcedure
+    .input(z.object({ baby_id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const sleeps = await ctx.prisma.sleep.findMany({
+        where: {
+          babyId: input.baby_id,
+        },
+      });
+      const yearList = new Set<number>();
+      sleeps.forEach((sleep) => {
+        yearList.add(sleep.start.getFullYear());
+      });
+      return Array.from(yearList);
     }),
 });
