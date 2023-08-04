@@ -31,3 +31,8 @@ type Nap = {
   end: Date;
   durationMinutes: number;
 };
+
+type message = {
+  user: boolean;
+  text: string;
+};
