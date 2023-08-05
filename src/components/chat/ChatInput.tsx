@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { toast } from "react-hot-toast";
 
 interface Props {
   addMessage: (message: message) => void;
@@ -8,12 +9,24 @@ export default function ChatInput({ addMessage }: Props) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!inputRef.current?.value) {
+      toast.error("Please enter a question");
+      return;
+    }
+    if (inputRef.current?.value.length < 10) {
+      toast.error("Please enter a question with more than 10 characters");
+      return;
+    }
+    if (inputRef.current?.value.length > 500) {
+      toast.error("Please enter a question with less than 500 characters");
+      return;
+    }
     const message: message = {
       user: true,
       text: inputRef.current?.value || "",
     };
     addMessage(message);
-    inputRef.current!.value = "";
+    inputRef.current.value = "";
   };
 
   const autoResize = (e: any) => {
@@ -37,7 +50,7 @@ export default function ChatInput({ addMessage }: Props) {
               id="prompt-textarea"
               data-id="root"
               rows={1}
-              placeholder="Send a message"
+              placeholder="Ask a question"
               className="m-0 w-full resize-none border-0 bg-transparent p-0 pl-3 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pl-0 md:pr-12"
               style={{
                 maxHeight: "100px",
