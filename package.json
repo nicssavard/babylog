@@ -23,6 +23,7 @@
     "@trpc/react-query": "^10.26.0",
     "@trpc/server": "^10.26.0",
     "@types/bcrypt": "^5.0.0",
+    "@upstash/ratelimit": "^0.4.3",
     "aws-sdk": "^2.1409.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
