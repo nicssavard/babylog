@@ -1,5 +1,5 @@
 import Babies from "~/components/family/babies/Babies";
-import Sidebar from "~/components/Sidebar";
+import Sidebar from "~/components/family/Sidebar";
 import NewSleep from "~/components/NewSleep";
 import NewNap from "~/components/NewNap";
 import Data from "~/components/Data";

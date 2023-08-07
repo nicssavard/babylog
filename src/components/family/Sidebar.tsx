@@ -1,18 +1,13 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useStore from "~/store/userStore";
-import {
-  Bars3BottomLeftIcon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3BottomLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Night", href: "#", icon: HomeIcon, current: false },
-  { name: "Nap", href: "#", icon: HomeIcon, current: false },
-  { name: "Data", href: "#", icon: HomeIcon, current: false },
-  { name: "Graph", href: "#", icon: UsersIcon, current: false },
+  { name: "Night", current: false },
+  { name: "Nap", current: false },
+  { name: "Data", current: false },
+  { name: "Graph", current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -27,24 +22,9 @@ export default function Sidebar(): JSX.Element {
   const selectOption = (option: string) => {
     setContent(option);
     setSidebarOpen(false);
-    for (let i = 0; i < navigation.length; i++) {
-      if (navigation[i]?.name === option) {
-        navigation[i]!.current = true;
-      } else {
-        navigation[i]!.current = false;
-      }
-    }
   };
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -104,24 +84,14 @@ export default function Sidebar(): JSX.Element {
                       {navigation.map((item) => (
                         <a
                           key={item.name}
-                          href={item.href}
                           onClick={() => selectOption(item.name)}
                           className={classNames(
-                            item.current
+                            content === item.name
                               ? "bg-blue-100 text-blue-600"
                               : " text-blue-600  ",
                             "group flex items-center rounded-md px-2 py-2 text-2xl font-medium"
                           )}
                         >
-                          {/* <item.icon
-                            className={classNames(
-                              item.current
-                                ? "text-gray-500"
-                                : "text-gray-400 group-hover:text-gray-500",
-                              "mr-4 h-6 w-6 flex-shrink-0"
-                            )}
-                            aria-hidden="true"
-                          /> */}
                           {item.name}
                         </a>
                       ))}
@@ -148,20 +118,11 @@ export default function Sidebar(): JSX.Element {
                     onClick={() => setContent(item.name)}
                     className={classNames(
                       content === item.name
-                        ? " text-blue-600"
+                        ? " bg-blue-100 text-blue-800"
                         : "text-blue-600 hover:opacity-90",
                       "group flex cursor-pointer items-center rounded-md px-2 py-2 text-2xl font-medium"
                     )}
                   >
-                    {/* <item.icon
-                      className={classNames(
-                        item.current
-                          ? "text-gray-500"
-                          : "text-gray-400 group-hover:text-gray-500",
-                        "mr-3 h-6 w-6 flex-shrink-0"
-                      )}
-                      aria-hidden="true"
-                    /> */}
                     {item.name}
                   </div>
                 ))}
