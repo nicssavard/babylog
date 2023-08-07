@@ -1,4 +1,4 @@
-import Babies from "~/components/Babies";
+import Babies from "~/components/family/babies/Babies";
 import Sidebar from "~/components/Sidebar";
 import NewSleep from "~/components/NewSleep";
 import NewNap from "~/components/NewNap";
