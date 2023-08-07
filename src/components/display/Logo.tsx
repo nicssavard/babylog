@@ -1,5 +1,5 @@
 import Image from "next/image";
-import BabyLogo from "../images/babyLogo.png";
+import BabyLogo from "../../images/babyLogo.png";
 interface Props {
   logoSize: number;
   textSize: string;

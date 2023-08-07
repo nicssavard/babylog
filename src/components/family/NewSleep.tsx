@@ -1,73 +1,72 @@
-import { Button } from "./Button";
-import FormInput from "./FormInput";
+import { Button } from "../display/Button";
+import FormInput from "../display/FormInput";
 import { api } from "~/utils/api";
 import useStore from "~/store/userStore";
 import { toast } from "react-hot-toast";
-import { LoadingSpinner } from "./loading";
+import { LoadingSpinner } from "../display/loading";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { toUTC, getCurrentDate } from "~/utils/dateUtils";
-const DEFAULT_NAP_START = "13:00";
-const DEFAULT_NAP_END = "15:00";
+const DEFAULT_SLEEP_START = "20:00";
+const DEFAULT_SLEEP_END = "07:00";
 const DEFAULT_MILK_AMOUNT = "0";
 
-type FormInputs = {
+interface FormInputs {
   date: string;
-  napStart: string;
-  napEnd: string;
+  sleepStart: string;
+  sleepEnd: string;
   milk: string;
-};
+}
 
 // Set default values for the form inputs
 const defaultValues = {
   date: getCurrentDate(),
-  napStart: DEFAULT_NAP_START,
-  napEnd: DEFAULT_NAP_END,
+  sleepStart: DEFAULT_SLEEP_START,
+  sleepEnd: DEFAULT_SLEEP_END,
   milk: DEFAULT_MILK_AMOUNT,
 };
 
-export default function NewNap() {
+export default function NewSleep() {
   const baby = useStore((state) => state.baby);
-  const { mutate: newNap, isLoading: isPosting } = api.nap.addNap.useMutation({
-    onSuccess: () => {
-      toast.success("Nap added!");
-      reset(defaultValues);
-    },
-    onError: (e) => {
-      console.log(e);
-      toast.error("Failed to post! Please try again later.");
-    },
-  });
+
+  const { mutate: newSleep, isLoading: isPosting } =
+    api.sleep.addSleep.useMutation({
+      onSuccess: () => {
+        toast.success("Sleep added!");
+        reset(defaultValues);
+      },
+      onError: (e) => {
+        console.log(e);
+        toast.error("Failed to post! Please try again later.");
+      },
+    });
 
   // Initialize form with react-hook-form
   const { register, handleSubmit, reset } = useForm<FormInputs>({
     defaultValues,
   });
-  const onSubmit: SubmitHandler<FormInputs> = (data) => addNap(data);
+  const onSubmit: SubmitHandler<FormInputs> = (data) => addSleep(data);
 
-  const addNap = (data: FormInputs) => {
+  const addSleep = (data: FormInputs) => {
     if (!baby) {
       toast.error("Please select a baby first!");
       return;
     }
-    if (data.napStart >= data.napEnd) {
-      toast.error("Nap start must be before nap end!");
-      return;
-    }
 
     // Convert sleep start and end times to UTC to prevent timezone issues
-    const napStart = new Date(`${data.date} ${data.napStart}`);
-    const utcNapStart = toUTC(napStart);
+    const sleepStart = new Date(`${data.date} ${data.sleepStart}`);
+    const utcSleepStart = toUTC(sleepStart);
 
-    const napEnd = new Date(`${data.date} ${data.napEnd}`);
-    const utcNapEnd = toUTC(napEnd);
+    const sleepEnd = new Date(`${data.date} ${data.sleepEnd}`);
+    sleepEnd.setDate(sleepEnd.getDate() + 1);
+    const utcSleepEnd = toUTC(sleepEnd);
 
     const sleepDurationMinutes =
-      (utcNapEnd.getTime() - utcNapStart.getTime()) / 1000 / 60;
+      (utcSleepEnd.getTime() - utcSleepStart.getTime()) / 1000 / 60;
 
-    newNap({
+    newSleep({
       babyId: baby.id,
-      napStart: utcNapStart,
-      napEnd: utcNapEnd,
+      sleepStart: utcSleepStart,
+      sleepEnd: utcSleepEnd,
       milk: parseInt(data.milk),
       durationMinutes: sleepDurationMinutes,
     });
@@ -86,12 +85,12 @@ export default function NewNap() {
           />
           <FormInput
             label="Bed time"
-            register={register("napStart", { required: true })}
+            register={register("sleepStart")}
             type="time"
           />
           <FormInput
             label="Wake up time"
-            register={register("napEnd", { required: true })}
+            register={register("sleepEnd")}
             type="time"
           />
           <FormInput
@@ -102,10 +101,11 @@ export default function NewNap() {
             max="500"
             step="5"
           />
+
           <div className="mt-6 flex flex-row justify-center">
             {!isPosting ? (
               <Button color="blue" type="submit" className="text-xl">
-                Add Nap
+                Add Sleep
               </Button>
             ) : (
               <LoadingSpinner size={30} />

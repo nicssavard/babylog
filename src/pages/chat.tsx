@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Header } from "~/components/Header";
+import { Header } from "~/components/header/Header";
 import ChatInput from "~/components/chat/ChatInput";
 import { useSession } from "next-auth/react";
 import MessageList from "~/components/chat/MessageList";

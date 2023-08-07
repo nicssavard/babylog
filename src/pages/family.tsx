@@ -1,12 +1,12 @@
 import Babies from "~/components/family/babies/Babies";
 import Sidebar from "~/components/family/Sidebar";
-import NewSleep from "~/components/NewSleep";
-import NewNap from "~/components/NewNap";
-import Data from "~/components/Data";
-import DisplayData from "~/components/DisplayData";
+import NewSleep from "~/components/family/NewSleep";
+import NewNap from "~/components/family/NewNap";
+import Data from "~/components/family/data/Data";
+import Graphs from "~/components/family/graph/Graphs";
 import useStore from "~/store/userStore";
-import { Header } from "~/components/Header";
-import { Container } from "~/components/Container";
+import { Header } from "~/components/header/Header";
+import { Container } from "~/components/display/Container";
 import SignIn from "./auth/signin";
 import { useSession } from "next-auth/react";
 
@@ -45,7 +45,7 @@ export default function Family() {
             {content === "Night" && <NewSleep />}
             {content === "Nap" && <NewNap />}
             {content === "Data" && <Data />}
-            {content === "Graph" && <DisplayData />}
+            {content === "Graph" && <Graphs />}
           </div>
         </div>
       </Container>

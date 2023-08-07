@@ -3,10 +3,10 @@ import Link from "next/link";
 import { Popover, Transition } from "@headlessui/react";
 import clsx from "clsx";
 
-import { Button } from "@/components/Button";
-import { Container } from "@/components/Container";
-import { Logo } from "@/components/Logo";
-import { NavLink } from "@/components/NavLink";
+import { Button } from "~/components/display/Button";
+import { Container } from "~/components/display/Container";
+import { Logo } from "~/components/display/Logo";
+import { NavLink } from "~/components/header/NavLink";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import useStore from "~/store/userStore";

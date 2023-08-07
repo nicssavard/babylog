@@ -1,9 +1,9 @@
-import Link from 'next/link'
+import Link from "next/link";
 
 type NavLinkProps = {
-  href: string
-  children: React.ReactNode
-}
+  href: string;
+  children: React.ReactNode;
+};
 
 export function NavLink({ href, children }: NavLinkProps) {
   return (
@@ -13,5 +13,5 @@ export function NavLink({ href, children }: NavLinkProps) {
     >
       {children}
     </Link>
-  )
+  );
 }

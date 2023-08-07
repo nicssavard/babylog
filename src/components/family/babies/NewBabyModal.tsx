@@ -1,12 +1,12 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Button } from "./Button";
+import { Button } from "../../display/Button";
 import { api } from "~/utils/api";
 import AWS from "aws-sdk";
 import useStore from "~/store/userStore";
-import FormInput from "./FormInput";
+import FormInput from "../../display/FormInput";
 import { toast } from "react-hot-toast";
-import { LoadingSpinner } from "./loading";
+import { LoadingSpinner } from "../../display/loading";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface FormInputs {
@@ -19,7 +19,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function BabyModal({ onClose }: Props) {
+export default function NewBabyModal({ onClose }: Props) {
   const [open, setOpen] = useState(true);
   const user = useStore((state) => state.user);
 

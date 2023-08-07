@@ -1,6 +1,6 @@
-import { Container } from "@/components/Container";
+import { Container } from "~/components/display/Container";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import BabyModal from "../../BabyModal";
+import NewBabyModal from "./NewBabyModal";
 import { useState } from "react";
 import useStore from "~/store/userStore";
 import { api } from "~/utils/api";
@@ -26,7 +26,7 @@ export default function Babies() {
         </div>
       </div>
 
-      {babyModal && <BabyModal onClose={() => setBabyModal(false)} />}
+      {babyModal && <NewBabyModal onClose={() => setBabyModal(false)} />}
     </Container>
   );
 }

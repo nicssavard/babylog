@@ -1,5 +1,5 @@
 import ChatMessage from "./ChatMessage";
-import { LoadingSpinner } from "../loading";
+import { LoadingSpinner } from "../display/loading";
 
 interface Props {
   messages: message[];

@@ -1,14 +1,14 @@
 import Head from "next/head";
 import Link from "next/link";
 
-import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { Logo } from "../Logo";
+import { AuthLayout } from "~/components/authentification/AuthLayout";
+import { Button } from "~/components/display/Button";
+import { Logo } from "../display/Logo";
 import { api } from "~/utils/api";
 import { useForm, SubmitHandler } from "react-hook-form";
-import FormInput from "../FormInput";
+import FormInput from "../display/FormInput";
 import { toast } from "react-hot-toast";
-import { LoadingSpinner } from "../loading";
+import { LoadingSpinner } from "../display/loading";
 
 interface FormInputs {
   firstName: string;

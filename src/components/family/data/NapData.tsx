@@ -1,17 +1,19 @@
-import { Button } from "./Button";
+import { Button } from "../../display/Button";
 import { api } from "~/utils/api";
-import Sleep from "./Sleep";
 import useStore from "~/store/userStore";
+import moment from "moment";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { LoadingSpinner } from "../../display/loading";
+import { toast } from "react-hot-toast";
 
-export default function SleepData() {
+export default function NapData() {
   const baby = useStore((state) => state.baby);
   const setContent = useStore((state) => state.setContent);
-
-  const { data: sleep } = api.sleep.getSleepByBaby.useQuery({
+  const { data: naps } = api.nap.getNapByBaby.useQuery({
     baby_id: baby?.id || "",
   });
 
-  const addSleep = (content: string) => {
+  const addNap = (content: string) => {
     setContent(content);
   };
 
@@ -20,15 +22,15 @@ export default function SleepData() {
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900">
-            Sleep
+            Nap
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the sleep nights for {baby?.name}.
+            A list of all the naps for {baby?.name}.
           </p>
         </div>
         <div
           className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none"
-          onClick={() => addSleep("Night")}
+          onClick={() => addNap("Nap")}
         >
           <Button color="blue" type="button">
             <span className="text-white">Add</span>
@@ -77,8 +79,8 @@ export default function SleepData() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {sleep?.map((sleep) => (
-                  <Sleep key={sleep.id} sleep={sleep} />
+                {naps?.map((nap) => (
+                  <Nap key={nap.id} nap={nap} />
                 ))}
               </tbody>
             </table>
@@ -88,3 +90,59 @@ export default function SleepData() {
     </div>
   );
 }
+
+interface NapProps {
+  nap: Nap;
+}
+
+const Nap = ({ nap }: NapProps) => {
+  const ctx = api.useContext();
+
+  const { mutate: deleteNap, isLoading: isDeleting } =
+    api.nap.deleteNap.useMutation({
+      onSuccess: () => {
+        toast.success("Nap deleted!");
+        void ctx.nap.getNapByBaby.invalidate();
+      },
+      onError: (e) => {
+        console.log(e);
+        toast.error("Failed to delete nap! Please try again later.");
+      },
+    });
+
+  const napStart = moment(nap.start).utc().format("h:mm a");
+  const napEnd = moment(nap.end).utc().format("h:mm a");
+
+  const deleteNapHandler = () => {
+    deleteNap({ nap_id: nap.id });
+  };
+  return (
+    <tr key={nap.id}>
+      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+        {moment(nap.start).format("MM/D/YYYY")}
+      </td>
+      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+        {napStart}
+      </td>
+      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+        {napEnd}
+      </td>
+      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+        {nap.milk}
+      </td>
+      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+        {!isDeleting ? (
+          <a
+            href="#"
+            className="text-red-600 hover:text-red-500"
+            onClick={deleteNapHandler}
+          >
+            <TrashIcon className="h-5 w-5" aria-hidden="true" />
+          </a>
+        ) : (
+          <LoadingSpinner color="fill-red-600 text-red-300" />
+        )}
+      </td>
+    </tr>
+  );
+};

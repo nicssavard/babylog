@@ -1,14 +1,14 @@
 import { signIn } from "next-auth/react";
 import Head from "next/head";
-import { Logo } from "../Logo";
+import { Logo } from "../display/Logo";
 import { useRouter } from "next/router";
-import { AuthLayout } from "../AuthLayout";
-import { Button } from "../Button";
+import { AuthLayout } from "./AuthLayout";
+import { Button } from "../display/Button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import FormInput from "../FormInput";
+import FormInput from "../display/FormInput";
 import { useState } from "react";
-import { LoadingSpinner } from "../loading";
+import { LoadingSpinner } from "../display/loading";
 import Link from "next/link";
 
 //Guest login credentials

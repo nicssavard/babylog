@@ -1,7 +1,7 @@
 import SleepDurationByBedTimeChart from "./charts/SleepDurationByBedTimeChart";
 import SleepDurationByDate from "./charts/SleepDurationByDate";
 
-export default function DisplayData() {
+export default function Graphs() {
   return (
     <div className=" mx-8 flex w-full flex-col md:w-3/4">
       <div className="mb-10 mt-10">
