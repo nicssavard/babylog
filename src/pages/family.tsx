@@ -7,10 +7,17 @@ import DisplayData from "~/components/DisplayData";
 import useStore from "~/store/userStore";
 import { Header } from "~/components/Header";
 import { Container } from "~/components/Container";
+import SignIn from "./auth/signin";
+import { useSession } from "next-auth/react";
 
 export default function Family() {
+  const { data: sessionData, status } = useSession();
   const baby = useStore((state) => state.baby);
   const content = useStore((state) => state.content);
+
+  if (status === "unauthenticated") {
+    return <SignIn />;
+  }
 
   if (!baby)
     return (

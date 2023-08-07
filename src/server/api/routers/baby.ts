@@ -17,6 +17,20 @@ export const babyRouter = createTRPCRouter({
       throw err;
     }
   }),
+  getBabiesByUser: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.baby.findMany({
+          where: {
+            userId: input.userId,
+          },
+        });
+      } catch (err) {
+        console.log("Error getting babies", err);
+        throw err;
+      }
+    }),
   addBaby: publicProcedure
     .input(
       z.object({

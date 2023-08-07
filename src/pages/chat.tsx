@@ -1,12 +1,15 @@
 import Head from "next/head";
 import { Header } from "~/components/Header";
 import ChatInput from "~/components/chat/ChatInput";
+import { useSession } from "next-auth/react";
 import MessageList from "~/components/chat/MessageList";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import useStore from "~/store/userStore";
+import SignIn from "./auth/signin";
 
 export default function Chat() {
+  const { data: sessionData, status } = useSession();
   const user = useStore((state) => state.user);
   const [error, setError] = useState<string | null>(null);
   const {
@@ -36,6 +39,11 @@ export default function Chat() {
     });
     setMessages((messages) => [...messages, message]);
   };
+
+  if (status === "unauthenticated") {
+    return <SignIn />;
+  }
+
   return (
     <>
       <Head>

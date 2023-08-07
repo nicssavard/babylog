@@ -1,8 +1,15 @@
 import { api } from "~/utils/api";
 import Baby from "./Baby";
+import useStore from "~/store/userStore";
 
-export default function ListBabies() {
-  const babies = api.baby.getBabies.useQuery();
+interface Props {
+  userId: string;
+}
+export default function ListBabies({ userId }: Props) {
+  const baby = useStore((state) => state.baby);
+  const babies = api.baby.getBabiesByUser.useQuery({
+    userId: userId,
+  });
 
   return (
     <div className="flex flex-row align-middle">
