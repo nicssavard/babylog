@@ -58,7 +58,7 @@ export default function ChatInput({ addMessage }: Props) {
               }}
               onInput={autoResize}
             ></textarea>
-            <button className="enabled:bg-brand-purple absolute bottom-1.5 right-2 rounded-md p-1 text-blue-600 transition-colors disabled:text-gray-400 disabled:opacity-40 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent md:bottom-3 md:right-3 md:p-2">
+            <button className=" enabled:bg-brand-purple absolute bottom-1.5 right-2 rounded-md p-1 text-blue-600 transition-colors focus-visible:outline-blue-600 disabled:text-gray-400 disabled:opacity-40 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent md:bottom-3 md:right-3 md:p-2">
               <span data-state="closed">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

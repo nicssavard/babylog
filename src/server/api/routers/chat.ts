@@ -49,7 +49,7 @@ export const chatRouter = createTRPCRouter({
       const { success } = await ratelimit.limit(input.userID);
 
       if (!success) {
-        throw new Error("Rate limit exceeded");
+        throw new Error("message limit exceeded");
       }
 
       let messages: Message[] = [
