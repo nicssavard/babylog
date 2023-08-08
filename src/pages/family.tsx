@@ -63,7 +63,7 @@ export default function Family() {
   return (
     <>
       <Header />
-      <Container className=" bg-slate-100 px-1  py-2">
+      <Container className=" bg-slate-100  py-2">
         <div className=" flex flex-col md:flex-row ">
           {!isMobile && <Sidebar />}
 
