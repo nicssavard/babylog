@@ -11,19 +11,19 @@ const testimonials = [
   [
     {
       content:
-        "TaxPal is so easy to use I can’t help but wonder if it’s really doing the things the government expects me to do.",
+        "As a new mom, I was constantly worried about my baby's sleep patterns. This app has been a lifesaver! The detailed analysis helped me understand my child's sleep habits and put my mind at ease. I can now make informed decisions to ensure my little one gets the rest he needs.",
       author: {
         name: "Sheryl Berge",
-        role: "CEO at Lynch LLC",
+        role: "New Parent",
         image: avatarImage1,
       },
     },
     {
       content:
-        "I’m trying to get a hold of someone in support, I’m in a lot of trouble right now and they are saying it has something to do with my books. Please get back to me right away.",
+        "I often suggest this app to the parents of my young patients. Its robust analysis tools provide valuable insights into a child's sleep, which is crucial for their development. The ability to monitor sleep trends over time is an excellent feature that can aid in early detection of potential issues.",
       author: {
         name: "Amy Hahn",
-        role: "Director at Velocity Industries",
+        role: "Pediatrician",
         image: avatarImage4,
       },
     },
@@ -31,19 +31,19 @@ const testimonials = [
   [
     {
       content:
-        "The best part about TaxPal is every time I pay my employees, my bank balance doesn’t go down like it used to. Looking forward to spending this extra cash when I figure out why my card is being declined.",
+        "As someone who appreciates good technology, I must say that this app is incredibly user-friendly and precise. The charts and data visualizations are clear, making it easy to track and understand my daughter's sleep patterns. It's become an essential part of our nightly routine.",
       author: {
         name: "Leland Kiehn",
-        role: "Founder of Kiehn and Sons",
+        role: "Tech-Savvy Dad",
         image: avatarImage5,
       },
     },
     {
       content:
-        "There are so many things I had to do with my old software that I just don’t do at all with TaxPal. Suspicious but I can’t say I don’t love it.",
+        "I love the simplicity and efficiency of this app! Tracking both my kids' sleep patterns in one place is a breeze. The insights provided are extremely helpful in maintaining a healthy sleep routine for them. I highly recommend it to any parent looking to understand their child's sleep better.",
       author: {
         name: "Erin Powlowski",
-        role: "COO at Armstrong Inc",
+        role: "Father of Two",
         image: avatarImage2,
       },
     },
@@ -51,19 +51,19 @@ const testimonials = [
   [
     {
       content:
-        "I used to have to remit tax to the EU and with TaxPal I somehow don’t have to do that anymore. Nervous to travel there now though.",
+        "Managing the sleep of our triplets was a daunting task until we found this app. The ability to record and analyze sleep data for all three children individually has been invaluable. The suggestions and insights provided have made our nights much more peaceful. A must-have for parents with multiples!",
       author: {
         name: "Peter Renolds",
-        role: "Founder of West Inc",
+        role: "Parents of Triplets",
         image: avatarImage3,
       },
     },
     {
       content:
-        "This is the fourth email I’ve sent to your support team. I am literally being held in jail for tax fraud. Please answer your damn emails, this is important.",
+        "My daughter introduced me to this app to help me with my grandchildren when they stay over. It's so simple to use, even for someone who isn't tech-savvy like me! I love how it allows me to ensure that they're getting proper rest, just like their parents would.",
       author: {
         name: "Amy Hahn",
-        role: "Director at Velocity Industries",
+        role: "Grandmother",
         image: avatarImage4,
       },
     },

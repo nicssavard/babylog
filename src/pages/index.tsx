@@ -2,10 +2,10 @@ import Head from "next/head";
 
 // import { CallToAction } from '@/components/CallToAction'
 // import { Faqs } from '@/components/Faqs'
-// import { Footer } from '@/components/Footer'
+import { Footer } from "@/components/index/Footer";
 import { Header } from "~/components/header/Header";
 import { Hero } from "~/components/index/Hero";
-// import { Pricing } from '@/components/Pricing'
+import { Pricing } from "@/components/index/Pricing";
 import { PrimaryFeatures } from "@/components/index/PrimaryFeatures";
 // import { SecondaryFeatures } from '@/components/SecondaryFeatures'
 import Testimonials from "~/components/index/Testimonials";
@@ -27,10 +27,9 @@ export default function Home() {
         {/* <SecondaryFeatures />
         <CallToAction /> */}
         <Testimonials />
-        {/* <Pricing />
-        <Faqs /> */}
+        <Pricing />
       </main>
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 }

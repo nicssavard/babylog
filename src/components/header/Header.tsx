@@ -90,9 +90,9 @@ function MobileNavigation() {
             as="div"
             className="absolute inset-x-0 top-full z-50 mt-4 flex origin-top flex-col rounded-2xl bg-white p-4 text-lg tracking-tight text-slate-900 shadow-xl ring-1 ring-slate-900/5"
           >
-            <MobileNavLink href="#features">Features</MobileNavLink>
-            <MobileNavLink href="#testimonials">Testimonials</MobileNavLink>
-            <MobileNavLink href="#pricing">Pricing</MobileNavLink>
+            <MobileNavLink href="/#features">Features</MobileNavLink>
+            <MobileNavLink href="/#testimonials">Testimonials</MobileNavLink>
+            <MobileNavLink href="/#pricing">Pricing</MobileNavLink>
             <MobileNavLink href="/chat">Chat</MobileNavLink>
             {sessionData && (
               <>
@@ -135,9 +135,9 @@ export function Header() {
               <Logo textSize="text-2xl" logoSize={40} />
             </Link>
             <div className="hidden md:flex md:gap-x-6">
-              <NavLink href="#features">Features</NavLink>
-              <NavLink href="#testimonials">Testimonials</NavLink>
-              <NavLink href="#pricing">Pricing</NavLink>
+              <NavLink href="/#features">Features</NavLink>
+              <NavLink href="/#testimonials">Testimonials</NavLink>
+              <NavLink href="/#pricing">Pricing</NavLink>
               <NavLink href="/chat">Chat</NavLink>
             </div>
           </div>
