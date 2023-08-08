@@ -51,7 +51,7 @@ export default function Chat() {
       </Head>
       <Header />
       <main>
-        <div className=" h-[calc(100vh-147px)] md:h-[calc(100vh-174px)]">
+        <div className=" m-1 h-[calc(100vh-125px)]  md:h-[calc(100vh-140px)]">
           {messages && (
             <MessageList
               isLoading={isLoading}

@@ -16,7 +16,7 @@ export default function MessageList({
 }: Props) {
   const loading = <LoadingSpinner color="fill-blue-600 text-white-300" />;
   return (
-    <div className="mx-auto flex max-h-full  flex-grow flex-col overflow-y-auto md:max-w-2xl 1080:max-w-4xl">
+    <div className=" mx-auto flex max-h-full min-h-full flex-grow flex-col overflow-y-auto  rounded-lg bg-white shadow-lg md:max-w-3xl 1080:max-w-4xl">
       <div className="flex flex-col space-y-4">
         <ChatMessage
           message={{
