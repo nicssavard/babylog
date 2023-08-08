@@ -42,12 +42,19 @@ export default function Family() {
     return (
       <>
         <Header />
-        <Container>
-          <div className="flex flex-col md:flex-row">
-            <Sidebar />
-            <div className="flex w-full flex-col items-center">
-              <Babies />
-              <div className="mt-10 text-2xl"> Select a baby</div>
+        <Container className=" bg-slate-100 px-1  py-2">
+          <div className=" flex flex-col md:flex-row ">
+            {!isMobile && <Sidebar />}
+
+            <div className=" flex w-full flex-col items-center rounded-lg bg-white shadow-lg">
+              <div className="flex min-w-full flex-row">
+                <div className="flex flex-row justify-start">
+                  {isMobile && <Sidebar />}
+                </div>
+                <Babies />
+              </div>
+
+              <div className="my-20 text-4xl"> Select a baby</div>
             </div>
           </div>
         </Container>
