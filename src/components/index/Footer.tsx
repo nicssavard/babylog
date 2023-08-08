@@ -12,7 +12,7 @@ export function Footer() {
           {/* <Logo className="mx-auto h-10 w-auto" /> */}
           <div className="flex flex-row justify-center">
             <Link href="/" aria-label="Home">
-              <Logo logoSize={70} textSize={"text-5xl"} />
+              <Logo textSize="text-2xl" logoSize={40} />
             </Link>
           </div>
           <nav className="mt-10 text-sm" aria-label="quick links">
