@@ -5,35 +5,34 @@ import clsx from "clsx";
 
 import { Container } from "@/components/display/Container";
 import backgroundImage from "@/images/background-features.jpg";
-import screenshotExpenses from "@/images/screenshots/expenses.png";
-import screenshotPayroll from "@/images/screenshots/payroll.png";
-import screenshotReporting from "@/images/screenshots/reporting.png";
-import screenshotVatReturns from "@/images/screenshots/vat-returns.png";
+import screenshotChat from "@/images/screenshots/chat.jpg";
+import screenshotNight from "@/images/screenshots/night.jpg";
+import screenshotGraph from "@/images/screenshots/graph.jpg";
+import screenshotData from "@/images/screenshots/data.jpg";
 
 const features = [
   {
-    title: "Payroll",
+    title: "Record sleep data",
     description:
-      "Keep track of everyone's salaries and whether or not they've been paid. Direct deposit not supported.",
-    image: screenshotPayroll,
+      "We keep track of your child sleep patterns so you don't have to.",
+    image: screenshotNight,
   },
   {
-    title: "Claim expenses",
+    title: "View sleep data",
     description:
-      "All of your receipts organized into one place, as long as you don't mind typing in the data by hand.",
-    image: screenshotExpenses,
+      "View your child sleep data in a simple and easy to understand way.",
+    image: screenshotData,
   },
   {
-    title: "VAT handling",
+    title: "Analyze sleep data",
     description:
-      "We only sell our software to companies who don't deal with VAT at all, so technically we do all the VAT stuff they need.",
-    image: screenshotVatReturns,
+      "Analyse your child sleep patterns and find out how to optimize their sleep.",
+    image: screenshotGraph,
   },
   {
-    title: "Reporting",
-    description:
-      "Easily export your data into an Excel spreadsheet where you can do whatever the hell you want with it.",
-    image: screenshotReporting,
+    title: "Ask questions to our chatbot",
+    description: "Our chatbot is here to answer all your questions.",
+    image: screenshotChat,
   },
 ];
 
@@ -72,11 +71,10 @@ export function PrimaryFeatures() {
       <Container className="relative">
         <div className="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
           <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl md:text-5xl">
-            Everything you need to run your books.
+            No more sleepless nights. We are here to help you.
           </h2>
           <p className="mt-6 text-lg tracking-tight text-blue-100">
-            Well everything you need if you aren’t that picky about minor
-            details like tax compliance.
+            Everything you need to track your child sleep.
           </p>
         </div>
         <Tab.Group

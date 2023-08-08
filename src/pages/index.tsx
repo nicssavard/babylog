@@ -8,7 +8,7 @@ import { Hero } from "~/components/index/Hero";
 // import { Pricing } from '@/components/Pricing'
 import { PrimaryFeatures } from "@/components/index/PrimaryFeatures";
 // import { SecondaryFeatures } from '@/components/SecondaryFeatures'
-// import { Testimonials } from '@/components/Testimonials'
+import Testimonials from "~/components/index/Testimonials";
 
 export default function Home() {
   return (
@@ -25,9 +25,9 @@ export default function Home() {
         <Hero />
         <PrimaryFeatures />
         {/* <SecondaryFeatures />
-        <CallToAction />
+        <CallToAction /> */}
         <Testimonials />
-        <Pricing />
+        {/* <Pricing />
         <Faqs /> */}
       </main>
       {/* <Footer /> */}
