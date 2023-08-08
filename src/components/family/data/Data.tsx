@@ -3,7 +3,7 @@ import NapData from "./NapData";
 
 export default function Data() {
   return (
-    <div className="my-8">
+    <div className="mx-1 my-8">
       <div>
         <SleepData />
       </div>

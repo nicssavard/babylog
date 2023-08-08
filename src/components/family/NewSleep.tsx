@@ -73,7 +73,7 @@ export default function NewSleep() {
   };
 
   return (
-    <div className="rounded-lg bg-white p-10 text-left">
+    <div className="p-10 text-left">
       {/* eslint-disable-next-line */}
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* above line if not disabled Error: Promise-returning function provided to attribute where a void return was expected.  @typescript-eslint/no-misused-promises */}

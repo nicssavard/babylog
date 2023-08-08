@@ -11,8 +11,8 @@ export default function Babies() {
   const [babyModal, setBabyModal] = useState(false);
 
   return (
-    <Container className="mx-auto">
-      <div className="mx-auto flex flex-row justify-center">
+    <Container className="flex-colmx-auto flex h-20 p-2  md:my-2  ">
+      <div className="mx-auto flex flex-row justify-center ">
         {user && <ListBabies userId={user?.id} />}
         <div
           onClick={() => setBabyModal(true)}

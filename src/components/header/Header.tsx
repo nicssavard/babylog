@@ -127,7 +127,7 @@ export function Header() {
   }
 
   return (
-    <header className="py-5">
+    <header className="border-b-2 bg-white py-2 shadow-sm">
       <Container>
         <nav className="relative flex justify-between">
           <div className="flex items-center md:gap-x-12">

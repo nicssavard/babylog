@@ -107,7 +107,7 @@ export default function Sidebar(): JSX.Element {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="top-[96px] hidden md:fixed  md:flex md:w-48 md:flex-col">
+        <div className="top-[58px] hidden pt-5  md:fixed md:flex md:w-48 md:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="bg-palette-700 flex flex-grow flex-col  overflow-y-auto rounded-br-xl">
             <div className=" flex flex-grow flex-col">
@@ -118,8 +118,8 @@ export default function Sidebar(): JSX.Element {
                     onClick={() => setContent(item.name)}
                     className={classNames(
                       content === item.name
-                        ? " bg-blue-100 text-blue-800"
-                        : "text-blue-600 hover:opacity-90",
+                        ? "  text-blue-600"
+                        : "text-blue-400 hover:opacity-90",
                       "group flex cursor-pointer items-center rounded-md px-2 py-2 text-2xl font-medium"
                     )}
                   >
@@ -130,7 +130,7 @@ export default function Sidebar(): JSX.Element {
             </div>
           </div>
         </div>
-        <div className="flex flex-1 flex-col md:pl-48">
+        <div className=" flex flex-1 flex-col md:pl-48">
           <div className=" top-14  flex h-16 flex-shrink-0 bg-transparent ">
             <button
               type="button"

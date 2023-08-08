@@ -6,7 +6,7 @@ import Head from "next/head";
 import { Header } from "~/components/header/Header";
 import { Hero } from "~/components/index/Hero";
 // import { Pricing } from '@/components/Pricing'
-// import { PrimaryFeatures } from '@/components/PrimaryFeatures'
+import { PrimaryFeatures } from "@/components/index/PrimaryFeatures";
 // import { SecondaryFeatures } from '@/components/SecondaryFeatures'
 // import { Testimonials } from '@/components/Testimonials'
 
@@ -23,8 +23,8 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        {/* <PrimaryFeatures />
-        <SecondaryFeatures />
+        <PrimaryFeatures />
+        {/* <SecondaryFeatures />
         <CallToAction />
         <Testimonials />
         <Pricing />

@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#__next {
+  min-height: 100vh;
+}
+
+body {
+  min-height: 100vh;
+}
+
+html {
+  min-height: 100%;
+  background-color: rgb(241 245 249);
+}
